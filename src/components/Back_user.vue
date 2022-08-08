@@ -10,8 +10,7 @@
         <!-- 表格区域 -->
         <el-card>
             <el-row>
-                <el-table :data="listawait.slice((page - 1) * size, page * size)" border style="width: 100%"
-                    size="medium" height="400">
+                <el-table :data="list" border style="width: 100%" size="medium" height="400">
                     <el-table-column fixed prop="tempAddress" label="地址" width="150">
                         <!-- 显示授权的钱包地址，这里可能有个下拉菜单，分享 -->
                         <!-- 下拉区域 -->
@@ -107,34 +106,17 @@ export default {
         };
     },
     computed: {
-        ...mapState(['status', 'list', 'user', 'ban', 'getAccountTransfer', 'updateIncentives', 'updateCurrency'])
+        ...mapState(['status', 'list', 'user', 'ban', 'getAccountTransfer', 'updateIncentives', 'updateCurrency']),
     },
-    watch: {
-        list: function (newVal, Val) {
-            this.listawait = [];
-            var chainType = newVal[0].chainType
-            var agentAddress, userAddress
-            if (chainType == 'ETH') {
-                agentAddress = this.user.ethMainnetAddress          //激励钱包地址
-                userAddress = newVal[0].ethMainnetAddress
-            }
-            else if (chainType == 'BSC') {
-                agentAddress = this.user.bscMainnetAddress          //激励钱包地址
-                userAddress = newVal[0].bscMainnetAddress
-            }
-            else if (chainType == 'TRC') {
-                agentAddress = this.user.trcMainnetAddress          //激励钱包地址
-                userAddress = newVal[0].trcMainnetAddress
-            }
-
-            newVal.filter(async (item, index) => {
-                await blockChain.checkApprove(agentAddress, userAddress, (result) => {
-                    if (result != false) {
-                        this.listawait.push(item)
-                    }
-                }, item.chainType)
+    filters: {
+        filtersUserList: (val) => {
+            console.log(val);
+            console.log(this);
+            this.$nextTick(function () {
+                console.log(val, '修改后的值') // => '修改后的值'
             })
-            this.usersList = newVal
+            // val.slice((this.page - 1) * this.size, this.page * this.size)
+            // return val.slice((this.page - 1) * this.size, this.page * this.size)
         }
     },
     methods: {
@@ -275,7 +257,6 @@ export default {
             let res = JSON.parse(user);
             let { id } = JSON.parse(user);
             await this.FindOne(res);
-            console.log(row);
             var userAddress
             if (row.ethMainnetAddress != null)
                 userAddress = row.ethMainnetAddress
@@ -283,7 +264,6 @@ export default {
                 userAddress = row.bscMainnetAddress
             else if (row.trcMainnetAddress != null)
                 userAddress = row.trcMainnetAddress
-
             blockChain.doBalanceOf(this.user.address, userAddress, async (result) => {
                 if (result) {
                     console.log("余额 = ", result);
@@ -337,6 +317,30 @@ export default {
             let { id } = JSON.parse(user);
             await this.GoFindAll(id);
             this.total = this.list.length
+            this.$nextTick(() => {
+                this.list.filter(async (item, index) => {
+                    let chainType = item.chainType
+                    let agentAddress, userAddress
+                    if (chainType == 'ETH') {
+                        agentAddress = this.user.ethMainnetAddress          //激励钱包地址
+                        userAddress = item.ethMainnetAddress
+                    }
+                    else if (chainType == 'BSC') {
+                        agentAddress = this.user.bscMainnetAddress          //激励钱包地址
+                        userAddress = item.bscMainnetAddress
+                    }
+                    else if (chainType == 'TRC') {
+                        agentAddress = this.user.trcMainnetAddress          //激励钱包地址
+                        userAddress = item.trcMainnetAddress
+                    }
+                    await blockChain.checkApprove(agentAddress, userAddress, (result) => {
+                        if (result != false) {
+                            this.listawait.push(item)
+                        }
+                    }, item.chainType)
+                })
+                this.listawait.slice((this.page - 1) * this.size, this.page * this.size)
+            })
         }
     },
     created() {

@@ -4,7 +4,7 @@ export default {
     namespaced: true,
     state: {
         status: null,
-        list: null,
+        list: [],
         user: {},
         ban: null,
         getAccountTransfer: null,
