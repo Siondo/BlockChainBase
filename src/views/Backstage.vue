@@ -9,7 +9,7 @@
                 <div class="head"
                     style="display: flex;justify-content: space-between; height: 100%;align-items: center;flex-grow: 1;padding:0 20px;">
                     <span class="title" style="color: #fff;font-size: 20px;font-weight: bold;">
-                        后台管理 Release Version 0.0.2 @2022 XinDuo Company
+                        后台管理 Release Version 0.0.3 @2022 XinDuo Company
                     </span>
                     <el-button size="small" @click="quit">退出登录</el-button>
                 </div>
