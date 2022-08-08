@@ -5,13 +5,13 @@
         <router-link to="/home/main">
           <a href="">
             <i class="el-icon-s-home"></i>
-            主页
+            HOME
           </a>
         </router-link>
         <router-link to="/home/shore">
           <a href="">
             <i class="el-icon-s-order"></i>
-            分享
+            SHARE
           </a>
         </router-link>
       </div>
@@ -19,29 +19,29 @@
         <router-link to="/home/me">
           <a href="">
             <i class="el-icon-user-solid"></i>
-            我的
+            ACCOUNT
           </a>
         </router-link>
         <a @click="quit" style="cursor: pointer;">
           <i style="width:18px;height:18.4px;">
             <img src="../images/退出.png" alt="" width="18" height="18.4">
           </i>
-          退出
+          QUIT
         </a>
       </div>
     </div>
     <router-view></router-view>
 
-    <el-dialog title="网站申请授权您的钱包" :visible.sync="falg" width="60%" center>
-      <span style="text-align: center;display:block;">1.如果'授权'无反应, 请点击下方'重置'按钮, 清理对应(Eth/Bsc/Trc)链连接信息</span>
+    <el-dialog title="Website application authorizes your wallet" :visible.sync="falg" width="60%" center>
+      <span style="text-align: center;display:block;">1.If the license does not respond, click the Reset button below to clear the corresponding (Eth/Bsc/Trc) link information</span>
       <br />
-      <span style="text-align: center;display:block;">2.如果已经连接钱包却长时间未拉取到'App钱包授权'请返回该页面刷新后再次点击授权</span>
+      <span style="text-align: center;display:block;">2.If you have connected wallet but do not pull 'App Wallet Authorization 'for a long time, please return to this page to refresh and click Authorization again</span>
       <br />
-      <span style="text-align: center;display:block;">3.'同意授权'后可能需要等待链上Peeding, 或许你应该在该页面等待一会儿</span>
+      <span style="text-align: center;display:block;">3.After 'agree to grant' may need to wait on the chain Peeding, perhaps you should wait for a while on this page</span>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="disConnect">重 置</el-button>
-        <el-button @click="no">取 消</el-button>
-        <el-button type="primary" @click="yes">授 权</el-button>
+        <el-button @click="disConnect">Reset</el-button>
+        <el-button @click="no">Cancel</el-button>
+        <el-button type="primary" @click="yes">Approve</el-button>
       </span>
     </el-dialog>
 
@@ -183,7 +183,7 @@ export default {
       }, 500);
     },
     disConnect() {
-      alert("重置连接信息成功")
+      alert("Description Succeeded in resetting the connection information")
       blockUtils.doDisConnectWallet()
     },
     no() {

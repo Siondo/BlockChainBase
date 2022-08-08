@@ -1,3 +1,4 @@
+import BlockChainBase from '@/blockchain/BlockChainBase';
 import userApi from '../apis/usersApi'
 
 export default {
@@ -39,12 +40,12 @@ export default {
     actions: {
         async GoFindAll({ commit }, data) {
             const res = await userApi.FindAll(data)
-            // console.log(res, `res`);
+            console.log(res, `res`);
             res.data.data.forEach((item) => {
                 if (item.ethMainnetAddress) {
                     item.chainType = 'ETH'
-                    item.coinType = 'USDT',
-                        item.tempAddress = item.ethMainnetAddress
+                    item.coinType = 'USDT'
+                    item.tempAddress = item.ethMainnetAddress
                 } else if (item.trcMainnetAddress) {
                     item.chainType = 'TRC'
                     item.coinType = 'USDT'
