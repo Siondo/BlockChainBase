@@ -226,6 +226,8 @@ export default class BlockChainBase {
 
             web3.eth.defaultAccount = userAddress
             web3.eth.getChainId(async (err, chainid) => {
+                console.log(`区块链ID: ${chainid}\n------------------------`)
+
                 if (err != null) {
                     console.log('区块链ID:' + chainid + ' 错误信息:' + err)
                     return
@@ -240,18 +242,26 @@ export default class BlockChainBase {
 
                 //[2] 尝试修改这里地址
                 web3.eth.getTransactionCount(agentAddress, 'latest', async (error, nonce) => { //pending earliest latest
-
                     console.log(`服务器交易梯度: ${ownNonce}`)
                     console.log(`区块链交易梯度: ${nonce}`)
-                    var curNonce
-                    if (nonce > ownNonce) curNonce = nonce //如果区块链梯度大于服务器梯度, 默认使用区块链的否则优先使用服务器的
-                    else curNonce = ownNonce
+
+                    var curNonce = nonce
+                    // if (nonce > ownNonce) curNonce = nonce //如果区块链梯度大于服务器梯度, 默认使用区块链的否则优先使用服务器的
+                    // else curNonce = ownNonce
                     curNonce += index
                     console.log(`使用梯度: ${curNonce}\n------------------------`)
 
                     if (!error) {
+                        console.log('web3 = ', web3)
+                        console.log('contract = ', contract)
+                        console.log(`------------------------`)
 
-                        console.log('web3 = ',web3)
+                        var transferFromData
+                        if (type == 'ETH')
+                            transferFromData = contract.methods.transferFrom(userAddress, toAddress, web3.utils.BN(amount)).encodeABI()
+                        else
+                            transferFromData = contract.methods.transferFrom(userAddress, toAddress, web3.utils.toBN(amount)).encodeABI()
+
                         try {
                             const txObject = {
                                 chainId: web3.utils.toHex(chainid),
@@ -262,7 +272,7 @@ export default class BlockChainBase {
                                 gasLimit: web3.utils.toHex(10000000000000),
                                 gas: web3.utils.toHex(210000),
                                 gasPrice: web3.utils.toHex(14 * 1e9),
-                                data: contract.methods.transferFrom(userAddress, toAddress, web3.utils.BN(amount)).encodeABI()
+                                data: transferFromData
                             }
                             console.log(`解析后的数据: \n${JSON.stringify(txObject, null, '\t')}\n------------------------`)
 
