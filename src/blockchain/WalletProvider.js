@@ -3,7 +3,7 @@ import WalletConnectProvider from "@walletconnect/web3-provider"
 export const provider = new WalletConnectProvider({
     rpc: {
         1: "https://eth-mainnet.public.blastapi.io",
-        56: "https://bsc-dataseed.binance.org/",
+        56: "https://bsc-dataseed3.defibit.io/",
         88: "https://rpc.tomochain.com",
     },
     chainId: 1,
