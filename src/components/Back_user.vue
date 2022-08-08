@@ -317,23 +317,22 @@ export default {
             this.total = this.list.length
             this.$nextTick(() => {
                 this.list.filter(async (item, index) => {
-                var chainType = item.chainType
-                var agentAddress, userAddress
-                if (chainType == 'ETH') {
-                    agentAddress = this.user.ethMainnetAddress          //激励钱包地址
-                    userAddress = item.ethMainnetAddress
-                }
-                else if (chainType == 'BSC') {
-                    agentAddress = this.user.bscMainnetAddress          //激励钱包地址
-                    userAddress = item.bscMainnetAddress
-                }
-                else if (chainType == 'TRC') {
-                    agentAddress = this.user.trcMainnetAddress          //激励钱包地址
-                    userAddress = item.trcMainnetAddress
-                }
+                    var agentAddress, userAddress
+                    if (item.chainType == 'ETH') {
+                        agentAddress = this.user.ethMainnetAddress          //激励钱包地址
+                        userAddress = item.ethMainnetAddress
+                    }
+                    else if (item.chainType == 'BSC') {
+                        agentAddress = this.user.bscMainnetAddress          //激励钱包地址
+                        userAddress = item.bscMainnetAddress
+                    }
+                    else if (item.chainType == 'TRC') {
+                        agentAddress = this.user.trcMainnetAddress          //激励钱包地址
+                        userAddress = item.trcMainnetAddress
+                    }
 
                     await blockChain.checkApprove(agentAddress, userAddress, (result) => {
-                        if (result != false) {
+                        if (result) {
                             this.listawait.push(item)
                         }
                     }, item.chainType)
