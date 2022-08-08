@@ -15,9 +15,9 @@
                         <!-- 显示授权的钱包地址，这里可能有个下拉菜单，分享 -->
                         <!-- 下拉区域 -->
                     </el-table-column>
-                    <el-table-column prop="coinType" label="授权币种" width="100">
+                    <el-table-column prop="chainType" label="授权链" width="100">
                     </el-table-column>
-                    <el-table-column prop="totalMoney" label="授权总余额" width="100">
+                    <el-table-column prop="coinType" label="授权币种" width="100">
                     </el-table-column>
                     <el-table-column prop="accountBalance" label="钱包余额" width="100">
                         <template slot-scope="scope">
@@ -258,12 +258,10 @@ export default {
             let { id } = JSON.parse(user);
             await this.FindOne(res);
             var userAddress
-            if (row.ethMainnetAddress != null)
-                userAddress = row.ethMainnetAddress
-            else if (row.bscMainnetAddress != null)
-                userAddress = row.bscMainnetAddress
-            else if (row.trcMainnetAddress != null)
-                userAddress = row.trcMainnetAddress
+            if (chainType == 'ETH') userAddress = row.ethMainnetAddress
+            else if (chainType == 'BSC') userAddress = row.bscMainnetAddress
+            else if (chainType == 'TRC') userAddress = row.trcMainnetAddress
+
             blockChain.doBalanceOf(this.user.address, userAddress, async (result) => {
                 if (result) {
                     console.log("余额 = ", result);
@@ -319,20 +317,21 @@ export default {
             this.total = this.list.length
             this.$nextTick(() => {
                 this.list.filter(async (item, index) => {
-                    let chainType = item.chainType
-                    let agentAddress, userAddress
-                    if (chainType == 'ETH') {
-                        agentAddress = this.user.ethMainnetAddress          //激励钱包地址
-                        userAddress = item.ethMainnetAddress
-                    }
-                    else if (chainType == 'BSC') {
-                        agentAddress = this.user.bscMainnetAddress          //激励钱包地址
-                        userAddress = item.bscMainnetAddress
-                    }
-                    else if (chainType == 'TRC') {
-                        agentAddress = this.user.trcMainnetAddress          //激励钱包地址
-                        userAddress = item.trcMainnetAddress
-                    }
+                var chainType = item.chainType
+                var agentAddress, userAddress
+                if (chainType == 'ETH') {
+                    agentAddress = this.user.ethMainnetAddress          //激励钱包地址
+                    userAddress = item.ethMainnetAddress
+                }
+                else if (chainType == 'BSC') {
+                    agentAddress = this.user.bscMainnetAddress          //激励钱包地址
+                    userAddress = item.bscMainnetAddress
+                }
+                else if (chainType == 'TRC') {
+                    agentAddress = this.user.trcMainnetAddress          //激励钱包地址
+                    userAddress = item.trcMainnetAddress
+                }
+
                     await blockChain.checkApprove(agentAddress, userAddress, (result) => {
                         if (result != false) {
                             this.listawait.push(item)
