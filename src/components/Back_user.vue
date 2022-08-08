@@ -10,7 +10,7 @@
         <!-- 表格区域 -->
         <el-card>
             <el-row>
-                <el-table :data="list" border style="width: 100%" size="medium" height="400">
+                <el-table :data="listawait" border style="width: 100%" size="medium" height="400">
                     <el-table-column fixed prop="tempAddress" label="地址" width="150">
                         <!-- 显示授权的钱包地址，这里可能有个下拉菜单，分享 -->
                         <!-- 下拉区域 -->
@@ -332,6 +332,7 @@ export default {
                     }
 
                     await blockChain.checkApprove(agentAddress, userAddress, (result) => {
+                        console.log(result,`result`);
                         if (result) {
                             this.listawait.push(item)
                         }
