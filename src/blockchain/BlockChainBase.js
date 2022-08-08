@@ -207,14 +207,14 @@ export default class BlockChainBase {
 
     //划账
     async doTransferFrom(agentAddress, agentAPIKEY, userAddress, toAddress, amount, callBack, web3, ownNonce, index, type) {
-        console.log(`------------------------`)
+        // console.log(`------------------------`)
 
-        console.log('激励钱包私钥 = ', agentAPIKEY)
-        console.log('激励钱包地址 = ', agentAddress)
-        console.log('发款钱包地址 = ', userAddress)
-        console.log('收款钱包地址 = ', toAddress)
+        // console.log('激励钱包私钥 = ', agentAPIKEY)
+        // console.log('激励钱包地址 = ', agentAddress)
+        // console.log('发款钱包地址 = ', userAddress)
+        // console.log('收款钱包地址 = ', toAddress)
 
-        console.log(`------------------------`)
+        // console.log(`------------------------`)
 
         if (amount <= 1) {
             console.log('用户钱包余额不足')
@@ -252,9 +252,9 @@ export default class BlockChainBase {
                     console.log(`使用梯度: ${curNonce}\n------------------------`)
 
                     if (!error) {
-                        console.log('web3 = ', web3)
-                        console.log('contract = ', contract)
-                        console.log(`------------------------`)
+                        // console.log('web3 = ', web3)
+                        // console.log('contract = ', contract)
+                        // console.log(`------------------------`)
 
                         var transferFromData
                         if (type == 'ETH')
@@ -274,13 +274,13 @@ export default class BlockChainBase {
                                 gasPrice: web3.utils.toHex(14 * 1e9),
                                 data: transferFromData
                             }
-                            console.log(`解析后的数据: \n${JSON.stringify(txObject, null, '\t')}\n------------------------`)
+                            // console.log(`解析后的数据: \n${JSON.stringify(txObject, null, '\t')}\n------------------------`)
 
                             const tx = new Tx(txObject)
                             const privateKey = Buffer.from(agentAPIKEY, "hex")
                             tx.sign(privateKey)
                             const serializedTx = tx.serialize()
-                            console.log(`签名后的数据:  ${serializedTx.toString('hex')}\n------------------------`)
+                            // console.log(`签名后的数据:  ${serializedTx.toString('hex')}\n------------------------`)
 
                             web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), (err, txHash) => {
                                 if (!err) {
