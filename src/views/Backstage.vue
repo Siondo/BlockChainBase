@@ -9,9 +9,18 @@
                 <div class="head"
                     style="display: flex;justify-content: space-between; height: 100%;align-items: center;flex-grow: 1;padding:0 20px;">
                     <span class="title" style="color: #fff;font-size: 20px;font-weight: bold;">
-                        后台管理 Release Version 0.0.3 @2022 XinDuo Company
+                        后台管理 Release Version 0.0.2 @2022 XinDuo Company
                     </span>
-                    <el-button size="small" @click="quit">退出登录</el-button>
+                    <!-- <el-button size="small" @click="quit">退出登录</el-button> -->
+                    <el-dropdown @command="handleCommand" size="small" type="primary">
+                        <el-button type="primary" style="background-color:#fff;color: #000;border-color: #fff;">
+                            我的<i class="el-icon-arrow-down el-icon--right"></i>
+                        </el-button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="changePassword">修改密码</el-dropdown-item>
+                            <el-dropdown-item command="quit">退出登录</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
                 </div>
             </el-header>
             <!-- </el-row> -->
@@ -30,6 +39,23 @@
                 </el-container>
             </el-row>
         </el-container>
+        <el-dialog title="修改密码" :visible.sync="dialogFormVisible">
+            <el-form :model="form" :rules="rules" ref="form" status-icon>
+                <el-form-item label="当前密码" :label-width="formLabelWidth" prop="nowPassword">
+                    <el-input v-model="form.nowPassword" autocomplete="off" show-password></el-input>
+                </el-form-item>
+                <el-form-item label="修改密码" :label-width="formLabelWidth" prop="changePassword">
+                    <el-input v-model="form.changePassword" autocomplete="off" show-password></el-input>
+                </el-form-item>
+                <el-form-item label="确认密码" :label-width="formLabelWidth" prop="confirmPassword">
+                    <el-input v-model="form.confirmPassword" autocomplete="off" show-password></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -40,29 +66,147 @@ const { mapState, mapMutations, mapActions } = createNamespacedHelpers("Backstag
 export default {
     name: "BackStage",
     data() {
+        var validatePass = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请输入当前密码'));
+            }
+            else {
+                this.iptBlur((res) => {
+                    console.log(res, `res`);
+                    if (res) {
+                        callback();
+                    } else {
+                        callback(new Error(`输入密码错误`));
+                    }
+                })
+            }
+        };
+        var validatePass2 = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请输入密码'));
+            } else {
+                if (this.form.changePassword !== '') {
+                    // this.$refs.form.validateField('changePassword');
+                }
+                callback();
+            }
+        };
+        var validatePass3 = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请再次输入密码'));
+            } else if (value !== this.form.changePassword) {
+                callback(new Error('两次输入密码不一致!'));
+            } else {
+                callback();
+            }
+        };
         return {
-            user: ''
+            user: '',
+            dialogFormVisible: false,
+            form: {
+                nowPassword: '',
+                changePassword: '',
+                confirmPassword: '',
+            },
+            formLabelWidth: '120px',
+            rules: {
+                nowPassword: [
+                    { validator: validatePass, trigger: 'blur' }
+                ],
+                changePassword: [
+                    { validator: validatePass2, trigger: 'blur' }
+                ],
+                confirmPassword: [
+                    { validator: validatePass3, trigger: 'blur' }
+                ],
+            }
         }
     },
     computed: {
-        ...mapState(['data'])
+        ...mapState(['data', 'verifyPassWordRes', 'nowPassWordRes'])
     },
     methods: {
-        ...mapActions(['GetUserId']),
-        quit() {
-            // 点击退出登录
-            // 清空本地存储，跳转到登录页
-            sessionStorage.removeItem("token");
-            sessionStorage.removeItem("user");
-            this.$message({
-                message: '退出成功',
-                type: 'success'
+        ...mapActions(['GetUserId', 'VerifyPassWord', 'UpdatePassWord']),
+        handleCommand(command) {
+            switch (command) {
+                case 'quit':
+                    // 点击退出登录
+                    // 清空本地存储，跳转到登录页
+                    sessionStorage.removeItem("token");
+                    sessionStorage.removeItem("user");
+                    this.$message({
+                        message: '退出成功',
+                        type: 'success'
+                    });
+                    // location.replace('/') //跳回登录地址
+                    window.location.href = "/";
+                    this.$store.state.isLoading = true;
+                    break;
+                case 'changePassword':
+                    this.dialogFormVisible = true
+                    break;
+                default:
+                    break;
+            }
+        },
+        async iptBlur(callback) {
+            // 如果输入当前密码为空
+            if (this.form.nowPassword === '') {
+                callback(new Error('请输入当前密码'));
+            } else {
+                // 当前密码不为空
+                await this.VerifyPassWord({ id: this.user.id, passWord: this.form.nowPassword })
+                console.log(this.verifyPassWordRes.code);
+                if (this.verifyPassWordRes.code == 200) {
+                    callback(true);
+                } else {
+                    callback(false);
+                }
+            }
+
+        },
+        // 提交修改密码
+        submitForm(formName) {
+            this.$refs[formName].validate(async (valid) => {
+                if (valid) {
+                    await this.UpdatePassWord({ id: this.user.id, passWord: this.form.changePassword })
+                    console.log(this.nowPassWordRes);
+                    if (this.nowPassWordRes.code == 1) {
+                        this.$message({
+                            message: '修改密码成功',
+                            type: 'success'
+                        });
+                        this.dialogFormVisible = false
+                        setTimeout(() => {
+                            // 点击退出登录
+                            // 清空本地存储，跳转到登录页
+                            sessionStorage.removeItem("token");
+                            sessionStorage.removeItem("user");
+                            this.$message({
+                                message: '退出成功',
+                                type: 'success'
+                            });
+                            // location.replace('/') //跳回登录地址
+                            window.location.href = "/";
+                            this.$store.state.isLoading = true;
+                        }, 500);
+                    } else {
+                        this.$message({
+                            message: '修改密码失败',
+                            type: 'error'
+                        });
+                    }
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
             });
-            // location.replace('/') //跳回登录地址
-            window.location.href = "/";
-            this.$store.state.isLoading = true;
         },
     },
+    created() {
+        let user = JSON.parse(sessionStorage.getItem('user'));
+        this.user = user
+    }
 
 }
 </script>
@@ -93,4 +237,13 @@ export default {
 .el-aside {
     overflow: none auto;
     /* width:200px; */
+}
+
+.el-dropdown-link {
+    cursor: pointer;
+    color: #409EFF;
+}
+
+.el-icon-arrow-down {
+    font-size: 12px;
 }

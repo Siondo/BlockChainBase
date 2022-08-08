@@ -3,5 +3,11 @@ import axios from '../utils/axiosUtils'
 export default {
     getUserId(data) {
         return axios.post('/template/user/getUserInfo', data)
+    },
+    verifyPassWord(data) {
+        return axios.post('/template/user/verifyPassWord', data)
+    },
+    updatePassWord(data) {
+        return axios.post('/template/user/updatePassWord', data)
     }
 }

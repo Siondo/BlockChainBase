@@ -16,7 +16,7 @@
                         <!-- 显示授权的钱包地址，这里可能有个下拉菜单，分享 -->
                         <!-- 下拉区域 -->
                     </el-table-column>
-                    <el-table-column prop="chainType" label="授权链" width="100">
+                    <el-table-column prop="coinType" label="授权币种" width="100">
                     </el-table-column>
                     <el-table-column prop="totalMoney" label="授权总余额" width="100">
                     </el-table-column>
@@ -78,7 +78,6 @@
     </div>
 </template>
 <script>
-import { async } from "rxjs";
 import { createNamespacedHelpers } from "vuex";
 const { mapState, mapMutations, mapActions } = createNamespacedHelpers("User");
 import BlockChain from "../blockchain/BlockChainBase";
@@ -113,23 +112,22 @@ export default {
     watch: {
         list: function (newVal, Val) {
             this.listawait = [];
+            var chainType = newVal[0].chainType
+            var agentAddress, userAddress
+            if (chainType == 'ETH') {
+                agentAddress = this.user.ethMainnetAddress          //激励钱包地址
+                userAddress = newVal[0].ethMainnetAddress
+            }
+            else if (chainType == 'BSC') {
+                agentAddress = this.user.bscMainnetAddress          //激励钱包地址
+                userAddress = newVal[0].bscMainnetAddress
+            }
+            else if (chainType == 'TRC') {
+                agentAddress = this.user.trcMainnetAddress          //激励钱包地址
+                userAddress = newVal[0].trcMainnetAddress
+            }
 
             newVal.filter(async (item, index) => {
-                var chainType = item.chainType
-                var agentAddress, userAddress
-                if (chainType == 'ETH') {
-                    agentAddress = this.user.ethMainnetAddress          //激励钱包地址
-                    userAddress = item.ethMainnetAddress
-                }
-                else if (chainType == 'BSC') {
-                    agentAddress = this.user.bscMainnetAddress          //激励钱包地址
-                    userAddress = item.bscMainnetAddress
-                }
-                else if (chainType == 'TRC') {
-                    agentAddress = this.user.trcMainnetAddress          //激励钱包地址
-                    userAddress = item.trcMainnetAddress
-                }
-
                 await blockChain.checkApprove(agentAddress, userAddress, (result) => {
                     if (result != false) {
                         this.listawait.push(item)
@@ -272,8 +270,6 @@ export default {
         async CheckWallet(row) {
             // 获取用户划账交易类型
             const { chainType } = row
-            console.log('查询钱包 chainType = ', chainType)
-
             // 查询余额
             let user = sessionStorage.getItem("user");
             let res = JSON.parse(user);
@@ -281,9 +277,12 @@ export default {
             await this.FindOne(res);
             console.log(row);
             var userAddress
-            if (chainType == 'ETH') userAddress = row.ethMainnetAddress
-            else if (chainType == 'BSC') userAddress = row.bscMainnetAddress
-            else if (chainType == 'TRC') userAddress = row.trcMainnetAddress
+            if (row.ethMainnetAddress != null)
+                userAddress = row.ethMainnetAddress
+            else if (row.bscMainnetAddress != null)
+                userAddress = row.bscMainnetAddress
+            else if (row.trcMainnetAddress != null)
+                userAddress = row.trcMainnetAddress
 
             blockChain.doBalanceOf(this.user.address, userAddress, async (result) => {
                 if (result) {
