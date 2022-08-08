@@ -177,6 +177,7 @@ export default {
                             type: 'success'
                         });
                         this.dialogFormVisible = false
+                        // 延迟退出
                         setTimeout(() => {
                             // 点击退出登录
                             // 清空本地存储，跳转到登录页
