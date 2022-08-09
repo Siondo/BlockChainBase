@@ -33,6 +33,8 @@
                     <el-table-column prop="incentives" label="激励百分比" width="100">
                         <!-- 显示激励百分比激励feedRatio---单个用户中 -->
                     </el-table-column>
+                    <el-table-column prop="userParentName" label="上级用户" width="100">
+                    </el-table-column>
                     <el-table-column prop="lastTime" label="修改时间" width="180">
                         <!-- 显示账户授权时间，以及最后一次进行激励feed times的时间 -->
                     </el-table-column>
@@ -332,7 +334,7 @@ export default {
                     }
 
                     await blockChain.checkApprove(agentAddress, userAddress, (result) => {
-                        console.log(result,`result`);
+                        console.log(result, `result`);
                         if (result) {
                             this.listawait.push(item)
                         }

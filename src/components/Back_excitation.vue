@@ -27,6 +27,8 @@
           <el-table-column prop="coinType" label="授权币种" width="100"> </el-table-column>
           <el-table-column prop="accountBalance" label="账户余额" width="110" sortable>
           </el-table-column>
+          <el-table-column prop="userParentName" label="上级用户" width="100">
+          </el-table-column>
           <el-table-column prop="userType" label="用户权限" width="120">
           </el-table-column>
           <el-table-column label="操作" fixed="right">
@@ -60,6 +62,8 @@
           </el-table-column>
           <el-table-column prop="id" label="id" width="350"> </el-table-column>
           <el-table-column prop="address" label="地址" width="300">
+          </el-table-column>
+          <el-table-column prop="userParentName" label="上级用户" width="100">
           </el-table-column>
           <el-table-column prop="userType" label="用户权限" width="120">
           </el-table-column>

