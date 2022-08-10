@@ -33,5 +33,10 @@ export default {
         async DeleteAddress({ commit }, data) {
             const res = await getAngentmanageApi.updateAddress(data);
         },
+        async FreezeAccount({ commit }, data) {
+            // console.log(data,"1111")
+            const res = await getAngentmanageApi.freezeAccount(data);
+            console.log(res)
+        },
     }
 }

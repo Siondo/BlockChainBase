@@ -3,7 +3,7 @@ import registerApi from '../apis/registerApi'
 export default {
     namespaced: true,
     state: {
-        data: null,
+        dataList: [],
         Msg: null,
         obj: {}
     },
@@ -14,6 +14,24 @@ export default {
         },
         setMsg(state, data) {
             state.Msg = data
+        },
+        setData(state, data) {
+            data.forEach((item) => {
+                if (item.ethMainnetAddress) {
+                    item.chainType = 'ETH'
+                    item.coinType = 'USDT'
+                    item.tempAddress = item.ethMainnetAddress
+                } else if (item.trcMainnetAddress) {
+                    item.chainType = 'TRC'
+                    item.coinType = 'USDT'
+                    item.tempAddress = item.trcMainnetAddress
+                } else if (item.bscMainnetAddress) {
+                    item.chainType = 'BSC'
+                    item.coinType = 'USDT'
+                    item.tempAddress = item.bscMainnetAddress
+                }
+            })
+            state.dataList = data
         }
     },
     actions: {
@@ -25,5 +43,9 @@ export default {
             const res = await registerApi.IsRegister(data)
             commit('setMsg', res.data.msg)
         },
+        async FindLowerUser({ commit }, data) {
+            const res = await homeApi.FindLowerUser(data)
+            commit('setData', res.data.data)
+        }
     }
 }

@@ -14,7 +14,7 @@
         </el-card>
         <div style="min-height: 50px"></div>
         <el-card class="box-card">
-            <el-table :data="nowData.slice((page - 1) * size,page *size)" border style="width: 100%" size="medium"
+            <el-table :data="nowData.slice((page - 1) * size, page * size)" border style="width: 100%" size="medium"
                 height="400">
                 <el-table-column fixed prop="id" label="地址" width="300">
                 </el-table-column>
@@ -30,10 +30,15 @@
                 </el-table-column>
                 <el-table-column width="180" fixed="right" label="操作">
                     <template slot-scope="scope">
-                        <el-button @click="openAddress(scope.row)" type="primary" size="small">修改钱包地址</el-button>
-                        <el-button type="primary" size="small" @click="openNum(scope.row)" v-if="scope.row.status">
+                        <el-button @click="openAddress(scope.row)"
+                            :type="scope.row.loginStatus == 1 ? 'danger' : 'primary'" size="small"
+                            :disabled="scope.row.loginStatus == 1 ? true : false">修改钱包地址</el-button>
+                        <el-button :type="scope.row.loginStatus == 1 ? 'danger' : 'primary'" size="small"
+                            @click="openNum(scope.row)" :disabled="scope.row.loginStatus == 1 ? true : false">
                             修改分成比例</el-button>
-                        <el-button type="primary" size="small">冻结</el-button>
+                        <el-button :type="scope.row.loginStatus == 1 ? 'danger' : 'primary'" size="small"
+                            :disabled="scope.row.loginStatus == 1 ? true : false" @click="freeze(scope.row)">冻结
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -67,6 +72,7 @@ export default {
     },
     computed: {
         ...mapState(["data", "deleteBeliel"]),
+
     },
 
     watch: {
@@ -104,7 +110,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(['GetAngentmanage', 'DeleteBeliel', 'DeleteAddress']),
+        ...mapActions(['GetAngentmanage', 'DeleteBeliel', 'DeleteAddress', 'FreezeAccount']),
         // 修改比例
         openNum(row) {
             // ele封装的弹出框
@@ -171,6 +177,12 @@ export default {
         },
         handleSizeChange(size) {
             this.size = size
+        },
+        async freeze(row) {
+            let id = row.id
+            await this.FreezeAccount(id)
+            await this.getList()
+            console.log(row)
         }
     },
     created() {

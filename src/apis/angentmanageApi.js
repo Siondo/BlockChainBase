@@ -11,5 +11,9 @@ export default {
     // 修改钱包地址
     updateAddress(data) {
         return axios.post('/template/user/updateAddress', data)
+    },
+    // 冻结账户
+    freezeAccount(data) {
+        return axios.get(`/template/user/freezeAccount/${data}`)
     }
 }

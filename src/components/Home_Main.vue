@@ -1,8 +1,11 @@
 <template>
     <div class="main">
-        <div class="meShore" ref="mydiv">
-             <!-- 图表节点 -->
+        <div class="meShore">
+            <div class="btn-title">Click minering</div>
+            <div class="sub-title">Join a node to start mining</div>
+            <div class="meShore-Btn">Join Now</div>
         </div>
+        <div class="bgi"></div>
     </div>
 </template>
 <script>
@@ -10,75 +13,20 @@
 export default {
     name: "IsMain",
     mounted() {
-        this.setCharts();
     },
     methods: {
-        setCharts() {
-            let myChart = this.$echarts.init(this.$refs.mydiv);
-            let base = +new Date(1988, 9, 3);
-            let oneDay = 24 * 3600 * 1000;
-            let data = [[base, Math.random() * 300]];
-            for (let i = 1; i < 20000; i++) {
-                let now = new Date((base += oneDay));
-                data.push([+now, Math.round((Math.random() - 0.5) * 20 + data[i - 1][1])]);
-            }
-            let option = {
-                tooltip: {
-                    trigger: 'axis',
-                    position: function (pt) {
-                        return [pt[0], '10%'];
-                    }
-                },
-                title: {
-                    left: 'center',
-                    text: 'Large Ara Chart'
-                },
-                toolbox: {
-                    feature: {
-                        dataZoom: {
-                            yAxisIndex: 'none'
-                        },
-                        restore: {},
-                        saveAsImage: {}
-                    }
-                },
-                xAxis: {
-                    type: 'time',
-                    boundaryGap: false
-                },
-                yAxis: {
-                    type: 'value',
-                    boundaryGap: [0, '100%']
-                },
-                dataZoom: [
-                    {
-                        type: 'inside',
-                        start: 0,
-                        end: 20
-                    },
-                    {
-                        start: 0,
-                        end: 20
-                    }
-                ],
-                series: [
-                    {
-                        name: 'Fake Data',
-                        type: 'line',
-                        smooth: true,
-                        symbol: 'none',
-                        areaStyle: {},
-                        data: data
-                    }
-                ]
-            }
-            myChart.setOption(option);
-        }
+
 
     },
 }
 </script>
 <style scoped>
+* {
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue, sans-serif;
+    font-size: 3.73333333vw;
+    -webkit-font-smoothing: antialiased;
+}
+
 .main {
     flex-grow: 1;
     /* background-image: url(../images/14-登录.jpg);
@@ -87,15 +35,50 @@ export default {
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: right;
+    justify-content: space-around;
+    background-color: #1652F0;
+}
+
+.bgi {
+    width: 40%;
+    height: 70%;
+    /* background-color: #fff; */
+    background-image: url(../images/banner_home2.483edd9e.png);
+    background-repeat: no-repeat;
+    background-size: contain;
 }
 
 .meShore {
-    width: 35%;
-    height: 600px;
-    padding: 30px;
-    background-color: #fff;
+    width: 40%;
+    height: 60%;
     border-radius: 10px;
-    margin-right: 5%;
+}
+
+.btn-title {
+    font-family: Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue, sans-serif;
+    font-size: 4.8vw;
+    font-weight: 600;
+    color: #fff;
+}
+
+.sub-title {
+    font-size: 3.2vw;
+    font-weight: 600;
+    color: #fff;
+    margin-top: 1.6vw;
+}
+
+.meShore-Btn {
+    position: relative;
+    display: inline-block;
+    line-height: 9.6vw;
+    margin-top: 4.26666667vw;
+    padding: 0 5.33333333vw;
+    text-align: center;
+    font-weight: 600;
+    color: #1652f0;
+    border-radius: 1.33333333vw;
+    background: #fff;
+    box-shadow: 0 2px 4px 0 rgb(0 0 0 / 50%);
 }
 </style>
