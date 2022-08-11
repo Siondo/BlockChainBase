@@ -15,8 +15,9 @@
                 <img src="@/images/partner3.080de4b3.png">
             </div>
         </div>
-        <a href="https://ethereum.org" class="eth-website" id="eth_website"
-            style="color:#000;text-decoration: none;">ETH-COINBASEMART
+        <a href="https://ethereum.org" class="eth-website" id="eth_website" style="color:#000;text-decoration: none;">{{
+                this.defaultObj.chainType
+        }}-COINBASEMART
             website</a>
         <div class="section_title">
             <div id="lang_partner" class="title">Partner</div>
@@ -46,7 +47,30 @@
 </template>
 <script>
 export default {
-    name: "Tab_footer"
+    name: "Tab_footer",
+    props: ['defaultObj'],
+    data() {
+        return {
+            url: ''
+        }
+    },
+    created() {
+        console.log(this.defaultObj.chainType);
+        switch (this.defaultObj.chainType) {
+            case 'BSC':
+                this.url = 'https://bscscan.com/'
+                break;
+            case 'ETH':
+                this.url = 'https://ethereum.org'
+                break;
+            case 'TRC':
+                this.url = 'https://tronscan.org'
+                break;
+            default:
+                this.url = 'https://ethereum.org'
+                break;
+        }
+    }
 }
 </script>
 <style scoped>

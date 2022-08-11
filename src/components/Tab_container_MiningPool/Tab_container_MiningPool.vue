@@ -2,9 +2,9 @@
     <div>
         <TabContainerMiningPoolTabContainerMiningPoolPooldata :defaultObj="defaultObj" />
         <TabContainerMiningPoolTabContainerMiningPoolSectionTitle />
-        <TabContainerMiningPoolTabContainerMiningPoolUserOutput defaultObj:defaultObj />
+        <TabContainerMiningPoolTabContainerMiningPoolUserOutput :defaultObj="defaultObj" />
         <TabContainerMiningPoolTabContainerMiningPoolHelpCenter />
-        <TabContainerMiningPoolTabContainerMiningPoolFooter />
+        <TabContainerMiningPoolTabContainerMiningPoolFooter :defaultObj="defaultObj"/>
     </div>
 </template>
 <script>
