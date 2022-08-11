@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!-- _MiningPool页面 -->
         <TabContainerMiningPoolTabContainerMiningPoolPooldata />
         <TabContainerMiningPoolTabContainerMiningPoolSectionTitle />
         <TabContainerMiningPoolTabContainerMiningPoolUserOutput />
