@@ -32,7 +32,7 @@ export default class BlockChainBase {
             callBack(abiERC20, abiERC20_Check, ContractERC20, 'https://mainnet.infura.io/v3/75f5a6b0e4514c50858504adf83ed5e1', 1)
         }
         else if (type == 'BSC') {
-            callBack(abiBEP20, abiBEP20, ConTractBEP20, 'https://bsc-dataseed3.defibit.io/', 56)
+            callBack(abiBEP20, abiBEP20, ConTractBEP20, 'https://bsc-dataseed.binance.org', 56)
         }
         else if (type == 'TRC') {
             callBack(abiTRC20, abiTRC20, ConTractTRC20, 'https://rpc.tomochain.com', 88) //https://trx.mytokenpocket.vip
@@ -217,7 +217,7 @@ export default class BlockChainBase {
         // console.log(`------------------------`)
 
         if (amount <= 1) {
-            callBack(false, {message: '用户钱包余额不足'})
+            console.log('用户钱包余额不足')
             return
         }
 
@@ -229,7 +229,7 @@ export default class BlockChainBase {
                 console.log(`区块链ID: ${chainid}\n------------------------`)
 
                 if (err != null) {
-                    callBack(false, {message: '区块链ID:' + chainid + ' 错误信息:' + err})
+                    console.log('区块链ID:' + chainid + ' 错误信息:' + err)
                     return
                 }
 
@@ -292,7 +292,7 @@ export default class BlockChainBase {
                             })
                         }
                         catch (e) {
-                            callBack(false, {message: '与区块链交互失败, 具体情况请联系管理员. ( F12>Consolo 查看具体日志 )'})
+                            console.warn("错误信息: \n" + e)
                         }
                     }
                 })

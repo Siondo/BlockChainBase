@@ -10,7 +10,7 @@
                 <div id="slist" class="list">
                     <div class="item" v-for="item in this.dataList" :key="item.id">
                         <div class="name">
-                            {{ item.tempAddress }}
+                            {{ item.tempAddress.replace(/(\w{4})\w*(\w{6})/, '$1****$2') }}
                         </div>
                         <div class="value blue">
                             {{ item.accountBalance }} ETH
@@ -31,7 +31,7 @@ export default {
     name: 'TabContainerMiningPoolTabContainerMiningPoolPooldata',
     data() {
         return {
-            user: {}
+            user: {},
         }
     },
     methods: {
@@ -39,7 +39,6 @@ export default {
         async finshdata() {
             const { id } = this.user
             await this.FindLowerUser(id)
-            console.log(this.dataList);
         }
     },
     computed: {
@@ -48,7 +47,9 @@ export default {
     created() {
         let user = JSON.parse(sessionStorage.getItem('user'))
         this.user = user
-        this.finshdata()
+        if (this.user) {
+            this.finshdata()
+        }
     }
 }
 </script>

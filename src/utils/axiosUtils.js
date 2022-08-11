@@ -10,14 +10,14 @@ import store from '../store/index'
 //     baseURL: "http://192.168.0.107:9090",
 //     timeout: 3000,
 // });
-// const axiosInstance = axios.create({
-//     baseURL: "/api/",
-//     timeout: 3000, 
-// });
 const axiosInstance = axios.create({
-    baseURL: "https://api.siondo.cn",
+    baseURL: "/api/",
     timeout: 3000,
 });
+// const axiosInstance = axios.create({
+//     baseURL: "https://api.siondo.cn",
+//     timeout: 3000,
+// });
 
 // 配置请求拦截器和响应拦截器
 axiosInstance.interceptors.request.use(

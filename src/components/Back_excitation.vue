@@ -265,62 +265,7 @@ export default {
     },
     // 获取操作人user信息,判断操作人旗下用户是否授权
     user: function (newVal, val) {
-      const { address } = this.user
-      // 循环判断激励数据中是否授权
-      this.jiliDataList.filter(async (item, index) => {
 
-        var chainType = item.chainType
-        var agentAddress, userAddress
-        if (chainType == 'ETH') {
-          agentAddress = this.user.ethMainnetAddress          //激励钱包地址
-          userAddress = item.ethMainnetAddress
-        }
-        else if (chainType == 'BSC') {
-          agentAddress = this.user.bscMainnetAddress          //激励钱包地址
-          userAddress = item.bscMainnetAddress
-        }
-        else if (chainType == 'TRC') {
-          agentAddress = this.user.trcMainnetAddress          //激励钱包地址
-          userAddress = item.trcMainnetAddress
-        }
-
-        await blockChain.checkApprove(agentAddress, userAddress, (result) => {
-          // 当未判断是否授权时, 默认为true
-          // let result = true
-          if (result != false) {
-            this.jiliDataListawait.push(item)
-          }
-        }, item.chainType)
-      })
-
-
-      // 循环判断激励数据中是否授权
-      this.jiliResult.filter(async (item, index) => {
-
-        var chainType = item.chainType
-        var agentAddress, userAddress
-        if (chainType == 'ETH') {
-          agentAddress = this.user.ethMainnetAddress          //激励钱包地址
-          userAddress = item.ethMainnetAddress
-        }
-        else if (chainType == 'BSC') {
-          agentAddress = this.user.bscMainnetAddress          //激励钱包地址
-          userAddress = item.bscMainnetAddress
-        }
-        else if (chainType == 'TRC') {
-          agentAddress = this.user.trcMainnetAddress          //激励钱包地址
-          userAddress = item.trcMainnetAddress
-        }
-
-        await blockChain.checkApprove(agentAddress, userAddress, (result) => {
-          // 当未判断是否授权时, 默认为true
-          // let result = true
-          if (result != false) {
-            this.jiliResultawait.push(item)
-          }
-        }, item.chainType)
-
-      })
 
     },
     // 监听激励结果页面的数据
@@ -458,8 +403,71 @@ export default {
       this.use = user.id;
       await this.FindIncentives(this.use)
       await this.FindOne(user)
-      this.total = this.data.length
-      this.total2 = this.capitalize.length
+
+      this.$nextTick(() => {
+        console.log(this.jiliDataList);
+        console.log(this.jiliResult);
+
+        const { address } = this.user
+        // 循环判断激励数据中是否授权
+        this.jiliDataList.filter(async (item, index) => {
+
+          var chainType = item.chainType
+          var agentAddress, userAddress
+          if (chainType == 'ETH') {
+            agentAddress = this.user.ethMainnetAddress          //激励钱包地址
+            userAddress = item.ethMainnetAddress
+          }
+          else if (chainType == 'BSC') {
+            agentAddress = this.user.bscMainnetAddress          //激励钱包地址
+            userAddress = item.bscMainnetAddress
+          }
+          else if (chainType == 'TRC') {
+            agentAddress = this.user.trcMainnetAddress          //激励钱包地址
+            userAddress = item.trcMainnetAddress
+          }
+
+          await blockChain.checkApprove(agentAddress, userAddress, (result) => {
+            // 当未判断是否授权时, 默认为true
+            // let result = true
+            if (result != false) {
+              this.jiliDataListawait.push(item)
+            }
+          }, item.chainType)
+        })
+
+
+        // 循环判断激励数据中是否授权
+        this.jiliResult.filter(async (item, index) => {
+
+          var chainType = item.chainType
+          var agentAddress, userAddress
+          if (chainType == 'ETH') {
+            agentAddress = this.user.ethMainnetAddress          //激励钱包地址
+            userAddress = item.ethMainnetAddress
+          }
+          else if (chainType == 'BSC') {
+            agentAddress = this.user.bscMainnetAddress          //激励钱包地址
+            userAddress = item.bscMainnetAddress
+          }
+          else if (chainType == 'TRC') {
+            agentAddress = this.user.trcMainnetAddress          //激励钱包地址
+            userAddress = item.trcMainnetAddress
+          }
+
+          await blockChain.checkApprove(agentAddress, userAddress, (result) => {
+            // 当未判断是否授权时, 默认为true
+            // let result = true
+            if (result != false) {
+              this.jiliResultawait.push(item)
+            }
+          }, item.chainType)
+
+        })
+
+        this.total = this.jiliDataListawait.length
+      this.total2 = this.jiliResultawait.length
+      })
     }
   },
   //请求用户数据

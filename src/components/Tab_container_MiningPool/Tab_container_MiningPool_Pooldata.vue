@@ -6,7 +6,7 @@
                 <div class="item">
                     <div id="lang_total_output" class="name">Total output</div>
                     <div class="value blue">
-                        <span id="output">8485173.378107</span> ETH
+                        <span id="output">8485173.378107</span> {{this.defaultObj.chainType}}
                     </div>
                 </div>
                 <div class="item">
@@ -24,7 +24,7 @@
                 <div class="item">
                     <div id="lang_user_revenue" class="name">User Revenue</div>
                     <div class="value">
-                        <span id="revenue">7894028570.31</span> ETH
+                        <span id="revenue">7894028570.31</span> {{this.defaultObj.chainType}}
                     </div>
                 </div>
             </div>
@@ -38,6 +38,7 @@ import { createNamespacedHelpers } from "vuex";
 const { mapState, mapMutations, mapActions } = createNamespacedHelpers("Home");
 export default {
     name: 'TabContainerMiningPoolTabContainerMiningPoolUserOutput',
+    props:['defaultObj'],
     data() {
         return {
             user: {}

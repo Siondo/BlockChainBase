@@ -137,7 +137,6 @@ export default {
         handleReload() {
             // 刷新数据操作
             let user = sessionStorage.getItem("user");
-
             let { id } = JSON.parse(user);
             this.GoFindAll(id);
             window.location.reload();
@@ -281,29 +280,9 @@ export default {
                 e.currentTarget.style.display = "none";
                 e.currentTarget.nextElementSibling.style.display = "inline-block";
             }
-            // if (row.address == null) return false
             this.CheckWallet(row);
             this.scoperow = row;
         },
-        // showUSDT(row, e) {
-        //     // 显示币种类型
-        //     if (e.currentTarget.getAttribute("index") == row.id) {
-        //         e.currentTarget.style.display = "none";
-        //         e.currentTarget.nextElementSibling.style.display = "inline-block";
-        //     }
-        //     if (row.address == null) return false
-        //     this.getUSDT(row);
-        // },
-        // async getUSDT(row) {
-        //     blockChain.doCheckChainSymbol(row.ethMainnetAddress, (result) => {
-        //         if (result) {
-        //             this.usdt = result;
-        //             console.log(this.usdt);
-        //             this.UpdateCurrency({ id: row.id, currency: this.usdt });
-        //         } else return "查询失败";
-        //     });
-        //     this.IFshow = false;
-        // },
         handleCurrentChange(page) {
             this.page = page
         },
@@ -316,7 +295,6 @@ export default {
             await this.FindOne(res)
             let { id } = JSON.parse(user);
             await this.GoFindAll(id);
-            this.total = this.list.length
             this.$nextTick(() => {
                 this.list.filter(async (item, index) => {
                     var agentAddress, userAddress
@@ -334,12 +312,12 @@ export default {
                     }
 
                     await blockChain.checkApprove(agentAddress, userAddress, (result) => {
-                        console.log(result, `result`);
                         if (result) {
                             this.listawait.push(item)
                         }
                     }, item.chainType)
                 })
+                this.total = this.listawait.length
                 this.listawait.slice((this.page - 1) * this.size, this.page * this.size)
             })
         }

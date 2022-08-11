@@ -1,5 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import { MessageBox } from "element-ui";  // 引入
+
+
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Home from '../views/Home.vue'
@@ -22,6 +25,7 @@ import Order from '../components/Back_order.vue'
 Vue.use(VueRouter);
 
 const routes = [
+
   {
     path: '/home',
     name: 'home',
@@ -118,10 +122,28 @@ const routes = [
 
 ];
 
+
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  console.log('beforeEach', to, from);
+  if (to.path !== '/login' && to.path !== '/register' && to.path !== '/home/main') {
+    let user = JSON.parse(sessionStorage.getItem('user'));
+    console.log(user);
+    if (!user) {
+      MessageBox.alert('即将前往登陆', '找不到你的账号', {
+        confirmButtonText: '确定',
+        callback: action => {
+          window.location.href = "/"
+        }
+      })
+    }
+  }
+  next();
 });
 
 export default router;
