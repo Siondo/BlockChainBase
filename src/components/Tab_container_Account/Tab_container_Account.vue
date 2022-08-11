@@ -1,6 +1,8 @@
 <template>
     <div class="tab_container">
-
+        <TabContainerAccountTavContainerAccountPooldata />
+        <div style="min-height: 5vw;"></div>
+        <TabContainerAccountTabContainerAccountActionList />
     </div>
 </template>
 <script>
