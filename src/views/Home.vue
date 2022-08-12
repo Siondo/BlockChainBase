@@ -16,8 +16,10 @@
         </router-link>
       </div>
       <div class="center">
-        <img src="../images/icon_eth.f763823b.png" alt="" style="width: 2.93333333vw;">
-        <span id="lang_title">{{ this.defaultObj.str }}</span>
+        <img src="../images/ethereum.svg" alt="" style="width: 5.93333333vw;" v-if="this.defaultObj.id == 1">
+        <img src="../images/logo-bscscan.svg" alt="" style="width: 15.93333333vw;" v-if="this.defaultObj.id == 2">
+        <img src="../images/logo_left.251720b2.svg" alt="" style="width: 15.93333333vw;" v-if="this.defaultObj.id == 3">
+        <span id="lang_title" v-if="this.defaultObj.id == 1">{{ this.defaultObj.str }}</span>
       </div>
       <div class="me">
         <router-link to="/home/me" v-if="this.falg">
@@ -55,8 +57,6 @@
   </div>
 </template> 
 <script>
-// 引入组件
-import TabContainer from '../components/Home_tab_container.vue'
 // 封装的调用钱包方法
 import BlockChain from "../blockchain/BlockChainBase"
 // 引用状态机
@@ -73,7 +73,8 @@ export default {
       falg: true,
       defaultObj: {
         str: 'minering',
-        chainType: 'ETH'
+        chainType: 'ETH',
+        id: 1
       },
       arr: []
     }
@@ -114,17 +115,20 @@ export default {
           if (this.arr[1].eth_usdt) {
             this.defaultObj = {
               str: 'ETH',
-              chainType: 'ETH'
+              chainType: 'ETH',
+              id: 1
             }
           } else if (this.arr[1].bsc_usdt) {
             this.defaultObj = {
               str: 'BSC',
-              chainType: 'BSC'
+              chainType: 'BSC',
+              id: 2
             }
           } else if (this.arr[1].trc_usdt) {
             this.defaultObj = {
               str: 'TRC',
-              chainType: 'TRC'
+              chainType: 'TRC',
+              id: 3
             }
           }
         } else {
@@ -150,19 +154,22 @@ export default {
           if (agentAdressArr[1] == 'ETH') {
             this.defaultObj = {
               str: 'ETH',
-              chainType: 'ETH'
+              chainType: 'ETH',
+              id: 1
             }
           }
           else if (agentAdressArr[1] == 'BSC') {
             this.defaultObj = {
               str: 'BSC',
-              chainType: 'BSC'
+              chainType: 'BSC',
+              id: 2
             }
           }
           else if (agentAdressArr[1] == 'TRC') {
             this.defaultObj = {
               str: 'TRC',
-              chainType: 'TRC'
+              chainType: 'TRC',
+              id: 3
             }
           }
         }
@@ -231,7 +238,7 @@ export default {
   line-height: 200%;
   text-align: center;
   /* background-color: aqua; */
-}
+}w 
 
 button {
   width: 30%;
@@ -271,9 +278,9 @@ button:nth-of-type(2) {
 
 #lang_title {
   margin-left: 1.06666667vw;
-  font-size: 4.53333333vw;
+  font-size: 3.53333333vw;
   font-weight: 600;
-  color: #fff;
+  color: #081724;
 }
 
 .left a {
@@ -285,6 +292,12 @@ button:nth-of-type(2) {
 
 .left a i {
   font-size: 25px;
+}
+
+.center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .me {
