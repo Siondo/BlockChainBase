@@ -20,7 +20,7 @@
         <span id="lang_title">{{ this.defaultObj.str }}</span>
       </div>
       <div class="me">
-        <router-link to="/home/me">
+        <router-link to="/home/me" v-if="this.falg">
           <a href="">
             <i class="el-icon-user-solid"></i>
             ACCOUNT
@@ -36,7 +36,7 @@
       <router-view></router-view>
     </div>
 
-    <el-dialog title="Website application authorizes your wallet" :visible.sync="falg" width="60%" center>
+    <!-- <el-dialog title="Website application authorizes your wallet" :visible.sync="falg" width="60%" center>
       <span style="text-align: center;display:block;">1.If the license does not respond, click the Reset button below to
         clear the corresponding (Eth/Bsc/Trc) link information</span>
       <br />
@@ -49,7 +49,7 @@
         <el-button>Reset</el-button>
         <el-button type="primary">Approve</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
 
     <HomeTabContainer></HomeTabContainer>
   </div>
@@ -70,7 +70,7 @@ export default {
   name: 'Tab_container_MiningPool',
   data() {
     return {
-      falg: false,
+      falg: true,
       defaultObj: {
         str: 'minering',
         chainType: 'ETH'
@@ -86,6 +86,8 @@ export default {
     async finshdata() {
       //如果有数据
       if (this.$route.query.data) {
+        // 解析到有数据就隐藏个人中心
+        this.falg = false
         // 点击授权 解析restful数据
         let res = this.$route.query.data;
         let ar = res.split('?')

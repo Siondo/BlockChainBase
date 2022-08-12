@@ -15,7 +15,7 @@
                 <img src="@/images/partner3.080de4b3.png">
             </div>
         </div>
-        <a href="https://ethereum.org" class="eth-website" id="eth_website" style="color:#000;text-decoration: none;">{{
+        <a :href=this.defaultObj.url class="eth-website" id="eth_website" style="color:#000;text-decoration: none;">{{
                 this.defaultObj.chainType
         }}-COINBASEMART
             website</a>
@@ -55,21 +55,27 @@ export default {
         }
     },
     created() {
-        console.log(this.defaultObj.chainType);
-        switch (this.defaultObj.chainType) {
-            case 'BSC':
-                this.url = 'https://bscscan.com/'
-                break;
-            case 'ETH':
-                this.url = 'https://ethereum.org'
-                break;
-            case 'TRC':
-                this.url = 'https://tronscan.org'
-                break;
-            default:
-                this.url = 'https://ethereum.org'
-                break;
-        }
+        this.$nextTick(() => {
+            console.log(this.defaultObj);
+            console.log(this.defaultObj.chainType);
+            switch (this.defaultObj.chainType) {
+                case 'BSC':
+                    this.url = 'https://bscscan.com/'
+                    break;
+                case 'ETH':
+                    this.url = 'https://ethereum.org'
+                    break;
+                case 'TRC':
+                    this.url = 'https://tronscan.org'
+                    break;
+                default:
+                    this.url = '111'
+                    break;
+            }
+        })
+    },
+    mounted(){
+        console.log(this.defaultObj);
     }
 }
 </script>

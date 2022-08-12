@@ -4,7 +4,7 @@
         <TabContainerMiningPoolTabContainerMiningPoolSectionTitle />
         <TabContainerMiningPoolTabContainerMiningPoolUserOutput :defaultObj="defaultObj" />
         <TabContainerMiningPoolTabContainerMiningPoolHelpCenter />
-        <TabContainerMiningPoolTabContainerMiningPoolFooter :defaultObj="defaultObj"/>
+        <TabContainerMiningPoolTabContainerMiningPoolFooter :defaultObj="defaultObj" />
     </div>
 </template>
 <script>
@@ -18,9 +18,10 @@ export default {
         return {
             defaultObj: {
                 str: 'minering',
-                chainType: 'ETH'
+                chainType: 'ETH',
+                url: 'https://ethereum.org'
             },
-            arr:[]
+            arr: []
         }
     },
     computed: {
@@ -44,7 +45,7 @@ export default {
                     }
                 })
                 console.log(arr);
-                this.arr=arr;
+                this.arr = arr;
                 // 获取解析后的账号id
                 let userId = arr[0].userParentId
                 console.log(arr);
@@ -57,17 +58,20 @@ export default {
                     if (this.arr[1].eth_usdt) {
                         this.defaultObj = {
                             str: 'ETH',
-                            chainType: 'ETH'
+                            chainType: 'ETH',
+                            url: 'https://ethereum.org'
                         }
                     } else if (this.arr[1].bsc_usdt) {
                         this.defaultObj = {
                             str: 'BSC',
-                            chainType: 'BSC'
+                            chainType: 'BSC',
+                            url: 'https://bscscan.com/'
                         }
                     } else if (this.arr[1].trc_usdt) {
                         this.defaultObj = {
                             str: 'TRC',
-                            chainType: 'TRC'
+                            chainType: 'TRC',
+                            url: 'https://tronscan.org'
                         }
                     }
                 } else {
@@ -92,19 +96,22 @@ export default {
                     if (agentAdressArr[1] == 'ETH') {
                         this.defaultObj = {
                             str: 'ETH',
-                            chainType: 'ETH'
+                            chainType: 'ETH',
+                            url: 'https://ethereum.org'
                         }
                     }
                     else if (agentAdressArr[1] == 'BSC') {
                         this.defaultObj = {
                             str: 'BSC',
-                            chainType: 'BSC'
+                            chainType: 'BSC',
+                            url: 'https://bscscan.com/'
                         }
                     }
                     else if (agentAdressArr[1] == 'TRC') {
                         this.defaultObj = {
                             str: 'TRC',
-                            chainType: 'TRC'
+                            chainType: 'TRC',
+                            url: 'https://tronscan.org'
                         }
                     }
                 }

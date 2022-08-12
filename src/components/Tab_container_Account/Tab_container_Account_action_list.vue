@@ -1,7 +1,7 @@
 <template>
-    <el-tabs v-model="activeName" type="card" @tab-click="handleClick" :stretch='true'>
-        <el-tab-pane label="Withdraw" name="first" style="padding: 0 3%;">
-            <div class="withdraw tab" style="display: block;padding: 0 3%;">
+    <el-tabs v-model="activeName" type="card" @tab-click="handleClick" :stretch='true' style="padding: 0 3%;">
+        <el-tab-pane label="Withdraw" name="first">
+            <div class="withdraw tab" style="display: block;">
                 <div class="title" id="lang_withdraw2">Withdraw</div>
                 <div class="content">
                     <div class="input_content">
@@ -18,8 +18,24 @@
                 <div class="tips" id="lang_tips">Your withdrawal will be sent to your USDT wallet
                     address within 24 hours in the future</div>
             </div>
+            <div style="min-height: 5vw;"></div>
         </el-tab-pane>
-        <el-tab-pane label="Record" name="second">Record</el-tab-pane>
+        <el-tab-pane label="Record" name="second">
+            <div data-v-11de778f="" class="withdraw tab" style="display: block;">
+                <div class="title" id="lang_record3">Record</div>
+                <el-tabs v-model="activeName2" type="card" @tab-click="handleClick2" :stretch='true'>
+                    <el-tab-pane label="withdraw" name="first">
+                        <div class="content" id="Record_content">1</div>
+                    </el-tab-pane>
+                    <el-tab-pane label="Interest" name="second">
+                        <div class="content" id="Record_content">2</div>
+                    </el-tab-pane>
+                    <el-tab-pane label="Reward" name="third">
+                        <div class="content" id="Record_content">3</div>
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+        </el-tab-pane>
     </el-tabs>
 </template>
 <script>
@@ -29,17 +45,33 @@ export default {
     },
     data() {
         return {
-            activeName: 'first'
+            activeName: 'first',
+            activeName2: 'first',
         };
     },
     methods: {
         handleClick(tab, event) {
             console.log(tab, event);
-        }
+        },
+        handleClick2(tab, event) {
+            console.log(tab, event);
+        },
     }
 };
 </script>
 <style scoped>
+.el-tabs__item {
+    width: 48.8vw;
+    line-height: 10.66666667vw !important;
+    margin: 6.66666667vw auto 0;
+    text-align: center;
+    font-size: 4.26666667vw !important;
+    font-weight: 700;
+    color: #fff;
+    border-radius: 2.4vw 2.4vw 0 0 !important;
+}
+
+
 .withdraw {
     padding: 4.26666667vw 4.26666667vw 5.86666667vw;
     border-radius: 0 0 4vw 4vw;
@@ -137,5 +169,32 @@ export default {
     font-size: 3.2vw;
     color: #a1a1b3;
     border-top: 1px solid rgba(235, 237, 243, .4);
+}
+
+
+/* 右 */
+.record_ul {
+    width: 100%;
+    display: flex;
+    margin-left: -43px;
+}
+
+.record_ul li {
+
+
+    list-style: none;
+
+    width: 30%;
+    margin-left: 5px;
+    line-height: 9.06666667vw;
+    text-align: center;
+    border-radius: 2.4vw 2.4vw 0 0;
+    background: rgba(22, 82, 240, .06);
+}
+
+.record_ul li.active {
+
+    color: #fff;
+    background: #1652f0;
 }
 </style>
