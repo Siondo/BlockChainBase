@@ -124,7 +124,7 @@ export default {
     font-weight: 700;
     color: inherit;
     border-radius: 2.13333333vw;
-    background: #ececec url(@/images/icon_eth.f763823b.png) no-repeat 3.666667vw/4.8vw;
+    background: #ececec ;
 }
 
 a {
