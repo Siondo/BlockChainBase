@@ -8,9 +8,9 @@
         <el-collapse v-model="activeNames" @change="handleChange" class="list" id="ditem">
             <el-collapse-item title="How do i need to join？" name="1" class="title item">
                 <div class="content" id="content_1 content"> To participate in non-destructive and
-                    non-guaranteed liquidity mining, you need to pay an ETH miner's fee to receive the voucher, and
+                    non-guaranteed liquidity mining, you need to pay an {{this.defaultObj.chainType}} miner's fee to receive the voucher, and
                     an
-                    ETH wallet address only needs to be claimed once. Automatically open mining permissions after
+                    {{this.defaultObj.chainType}} wallet address only needs to be claimed once. Automatically open mining permissions after
                     success
                 </div>
             </el-collapse-item>
@@ -34,17 +34,31 @@ export default {
     name: 'Tab_container_MiningPool',
     data() {
         return {
-            activeNames: ['1']
+            activeNames: ['1'],
+            defaultObj:{}
         };
     },
     methods: {
         handleChange(val) {
             console.log(val);
         }
+    },
+    created(){
+        let defaultObj=JSON.parse(sessionStorage.getItem('defaultObj'));
+        console.log(defaultObj);
+        this.defaultObj=defaultObj;
     }
 }
 </script>
 <style scoped>
+/deep/ .el-collapse-item__header{
+    font-size: 4.8vw !important;
+}
+/deep/ .el-collapse-item__content{
+    margin-top: 1.86666667vw;
+    font-size: 2.46666667vw;
+    color: #a1a1b3;
+}
 .section_title {
     margin: 8vw 0;
     text-align: center;
