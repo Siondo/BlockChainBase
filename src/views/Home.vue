@@ -2,13 +2,13 @@
   <div class="app">
     <div class="header">
       <div class="left">
-        <router-link to="/home/main">
+        <router-link :to="homeMain">
           <a href="">
             <i class="el-icon-s-home"></i>
             HOME
           </a>
         </router-link>
-        <router-link to="/home/shore" v-if="this.falg">
+        <router-link :to="homeShore" v-if="this.falg">
           <a href="">
             <i class="iconfont icon-fenxiang"></i>
             SHARE
@@ -22,7 +22,7 @@
         <span id="lang_title">minering</span>
       </div>
       <div class="me">
-        <router-link to="/home/me" v-if="this.falg">
+        <router-link to="/home/me" v-if="!this.falg">
           <a href="">
             <i class="el-icon-user-solid"></i>
             ACCOUNT
@@ -70,13 +70,14 @@ export default {
   name: 'Tab_container_MiningPool',
   data() {
     return {
-      falg: true,
+      falg: false,
       defaultObj: {
         str: 'minering',
         chainType: 'ETH',
         id: 1
       },
-      arr: []
+      arr: [],
+      search:''
     }
   },
 
@@ -86,10 +87,11 @@ export default {
   methods: {
     ...mapActions(['GetUserId', 'GoAutoRegister']),
     async finshdata() {
+      this.init()
       //如果有数据
       if (this.$route.query.data) {
         // 解析到有数据就隐藏个人中心
-        this.falg = false
+        this.falg = true
         // 点击授权 解析restful数据
         let res = this.$route.query.data;
         let ar = res.split('?')
@@ -192,6 +194,33 @@ export default {
         window.location.href = "/";
       }, 500);
     },
+    getRandomString(len) {
+            let _charStr = 'abacdefghjklmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789',
+                min = 0,
+                max = _charStr.length - 1,
+                _str = '';                    //定义随机字符串 变量
+            //判断是否指定长度，否则默认长度为15
+            len = len || 15;
+            //循环生成字符串
+            for (var i = 0, index; i < len; i++) {
+                index = (function (randomIndexFunc, i) {
+                    return randomIndexFunc(min, max, i, randomIndexFunc);
+                })(function (min, max, i, _self) {
+                    let indexTemp = Math.floor(Math.random() * (max - min + 1) + min),
+                        numStart = _charStr.length - 10;
+                    if (i == 0 && indexTemp >= numStart) {
+                        indexTemp = _self(min, max, i, _self);
+                    }
+                    return indexTemp;
+                }, i);
+                _str += _charStr[index];
+            }
+            return _str;
+        },
+        init() {
+          this.homeShore='/home/shore'+window.location.search
+          this.homeMain='/home/main'+window.location.search
+        },
   },
   created() {
     this.finshdata()

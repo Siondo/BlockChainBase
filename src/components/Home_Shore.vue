@@ -78,8 +78,12 @@ export default {
     },
     created() {
         let user = JSON.parse(sessionStorage.getItem('user'))
-        if (user.userType == '3') {
+        if (user == '3') {
             this.init();
+        }
+        //如果有数据
+        else if (this.$route.query.data) {
+            this.input=window.location.href
         }
     }
 }
