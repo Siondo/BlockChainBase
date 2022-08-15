@@ -47,7 +47,6 @@ export default {
     methods: {
         ...mapActions(['FindLowerUser']),
         async finshdata() {
-
             const { id } = this.user
             await this.FindLowerUser(id)
         }
@@ -58,6 +57,8 @@ export default {
     created() {
         let user = JSON.parse(sessionStorage.getItem('user'))
         this.user = user
+        let defaultObj = JSON.parse(sessionStorage.getItem('defaultObj'))
+        console.log(this.defaultObj);
         // this.finshdata()
     }
 }

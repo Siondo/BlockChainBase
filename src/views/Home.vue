@@ -8,7 +8,7 @@
             HOME
           </a>
         </router-link>
-        <router-link to="/home/shore">
+        <router-link to="/home/shore" v-if="this.falg">
           <a href="">
             <i class="iconfont icon-fenxiang"></i>
             SHARE
@@ -17,9 +17,9 @@
       </div>
       <div class="center">
         <img src="../images/ethereum.svg" alt="" style="width: 5.93333333vw;" v-if="this.defaultObj.id == 1">
-        <img src="../images/logo-bscscan.svg" alt="" style="width: 15.93333333vw;" v-if="this.defaultObj.id == 2">
-        <img src="../images/logo_left.251720b2.svg" alt="" style="width: 15.93333333vw;" v-if="this.defaultObj.id == 3">
-        <span id="lang_title" v-if="this.defaultObj.id == 1">{{ this.defaultObj.str }}</span>
+        <img src="../images/logo-bscscan.png" alt="" style="width: 5.93333333vw;" v-if="this.defaultObj.id == 2">
+        <img src="../images/logo_left.251720b2.png" alt="" style="width: 5.93333333vw;" v-if="this.defaultObj.id == 3">
+        <span id="lang_title">minering</span>
       </div>
       <div class="me">
         <router-link to="/home/me" v-if="this.falg">
@@ -79,6 +79,7 @@ export default {
       arr: []
     }
   },
+
   computed: {
     ...mapState(['obj', 'Msg'])
   },
@@ -121,13 +122,13 @@ export default {
           } else if (this.arr[1].bsc_usdt) {
             this.defaultObj = {
               str: 'BSC',
-              chainType: 'BSC',
+              chainType: 'BNB',
               id: 2
             }
           } else if (this.arr[1].trc_usdt) {
             this.defaultObj = {
               str: 'TRC',
-              chainType: 'TRC',
+              chainType: 'TRX',
               id: 3
             }
           }
@@ -161,19 +162,21 @@ export default {
           else if (agentAdressArr[1] == 'BSC') {
             this.defaultObj = {
               str: 'BSC',
-              chainType: 'BSC',
+              chainType: 'BNB',
               id: 2
             }
           }
           else if (agentAdressArr[1] == 'TRC') {
             this.defaultObj = {
               str: 'TRC',
-              chainType: 'TRC',
+              chainType: 'TRX',
               id: 3
             }
           }
         }
       }
+      console.log(this.defaultObj);
+      sessionStorage.setItem("defaultObj", JSON.stringify(this.defaultObj));
     },
     quit() {
       this.$message({
@@ -238,9 +241,9 @@ export default {
   line-height: 200%;
   text-align: center;
   /* background-color: aqua; */
-}w 
+}
 
-button {
+w button {
   width: 30%;
   height: 15%;
   margin-left: 70px;
@@ -280,7 +283,7 @@ button:nth-of-type(2) {
   margin-left: 1.06666667vw;
   font-size: 3.53333333vw;
   font-weight: 600;
-  color: #081724;
+  color: #fff;
 }
 
 .left a {
@@ -294,7 +297,7 @@ button:nth-of-type(2) {
   font-size: 25px;
 }
 
-.center{
+.center {
   display: flex;
   justify-content: center;
   align-items: center;

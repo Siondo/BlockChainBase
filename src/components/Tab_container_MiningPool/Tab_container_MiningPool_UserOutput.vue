@@ -13,7 +13,8 @@
                             {{ item.tempAddress.replace(/(\w{4})\w*(\w{6})/, '$1****$2') }}
                         </div>
                         <div class="value blue">
-                            {{ item.accountBalance }} USDT
+                            <!-- {{ item.accountBalance }} USDT -->
+                            {{ item.num }} USDT
                         </div>
                     </div>
                 </div>
@@ -38,7 +39,9 @@ export default {
         ...mapActions(['FindLowerUser']),
         async finshdata() {
             const { id } = this.user
-            await this.FindLowerUser(id)
+            // await this.FindLowerUser(id)
+            await this.FindLowerUser()
+            console.log(this.dataList);
         }
     },
     computed: {
@@ -46,10 +49,8 @@ export default {
     },
     created() {
         let user = JSON.parse(sessionStorage.getItem('user'))
-        this.user = user
-        if (this.user) {
-            this.finshdata()
-        }
+
+        this.finshdata()
     }
 }
 </script>

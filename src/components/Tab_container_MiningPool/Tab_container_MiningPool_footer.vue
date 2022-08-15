@@ -80,6 +80,7 @@ export default {
 }
 </script>
 <style scoped>
+
 .section_title {
     margin: 8vw 0;
     text-align: center;

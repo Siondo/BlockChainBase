@@ -8,6 +8,6 @@ export default {
         return axios.post('/template/user/register', data)
     },
     FindLowerUser(id) {
-        return axios.get(`/template/user/findLowerUser/${id}`)
+        return axios.get(`/template/user/findLowerUser`)
     }
 }

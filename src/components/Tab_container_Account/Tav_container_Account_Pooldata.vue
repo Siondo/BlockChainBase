@@ -6,7 +6,7 @@
                 <div class="item">
                     <div id="lang_total_output" class="name"> Total output</div>
                     <div class="value">
-                        <span class="total"></span> ETH
+                        <span class="total"></span> {{ this.defaultObj.chainType }}
                     </div>
                 </div>
                 <div class="item">
@@ -32,10 +32,15 @@ export default {
     },
     data() {
         return {
+            defaultObj:{}
         };
     },
     methods: {
 
+    },
+    created(){
+        let defaultObj=JSON.parse(sessionStorage.getItem('defaultObj'))
+        this.defaultObj=defaultObj;
     }
 };
 </script>

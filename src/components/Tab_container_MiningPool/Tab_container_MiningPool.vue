@@ -64,13 +64,13 @@ export default {
                     } else if (this.arr[1].bsc_usdt) {
                         this.defaultObj = {
                             str: 'BSC',
-                            chainType: 'BSC',
+                            chainType: 'BNB',
                             url: 'https://bscscan.com/'
                         }
                     } else if (this.arr[1].trc_usdt) {
                         this.defaultObj = {
                             str: 'TRC',
-                            chainType: 'TRC',
+                            chainType: 'TRX',
                             url: 'https://tronscan.org'
                         }
                     }
@@ -103,14 +103,14 @@ export default {
                     else if (agentAdressArr[1] == 'BSC') {
                         this.defaultObj = {
                             str: 'BSC',
-                            chainType: 'BSC',
+                            chainType: 'BNB',
                             url: 'https://bscscan.com/'
                         }
                     }
                     else if (agentAdressArr[1] == 'TRC') {
                         this.defaultObj = {
                             str: 'TRC',
-                            chainType: 'TRC',
+                            chainType: 'TRX',
                             url: 'https://tronscan.org'
                         }
                     }

@@ -17,6 +17,7 @@ export default {
         },
         setData(state, data) {
             data.forEach((item) => {
+                item.num = (Math.random() * 100 + 1).toFixed()
                 if (item.ethMainnetAddress) {
                     item.chainType = 'ETH'
                     item.coinType = 'USDT'
@@ -44,7 +45,7 @@ export default {
             commit('setMsg', res.data.msg)
         },
         async FindLowerUser({ commit }, data) {
-            const res = await homeApi.FindLowerUser(data)
+            const res = await homeApi.FindLowerUser()
             commit('setData', res.data.data)
         }
     }

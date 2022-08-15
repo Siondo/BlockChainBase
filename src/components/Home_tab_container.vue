@@ -27,14 +27,17 @@ export default {
         handleClick(tab, event) {
             console.log(tab, event);
         }
+    },
+    created(){
     }
 };
 </script>
 <style scoped>
-.el-tabs__item {
-    width: 48.8vw;
-    line-height: 10.66666667vw !important;
-    margin: 6.66666667vw auto 0;
+/deep/ .el-tabs__item {
+    /* width: 48.8vw; */
+    line-height: 7vw;
+    height: 7vw ;
+    /* margin: 6.66666667vw auto 0; */
     text-align: center;
     font-size: 4.26666667vw !important;
     font-weight: 700;

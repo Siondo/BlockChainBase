@@ -4,7 +4,7 @@
             <div class="btn-title">Click minering</div>
             <div class="sub-title">Join a node to start mining</div>
             <div class="meShore-Btn" @click="check">Join Now</div>
-            <span class="Reset-Btn" @click="Reset">Reset</span>
+            <el-button class="Reset-Btn" @click="Reset" style="width:9vw;height: 5vw;font-size: 2vw;">Reset</el-button>
         </div>
         <div class="bgi"></div>
     </div>
