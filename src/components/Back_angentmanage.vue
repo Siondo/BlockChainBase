@@ -34,7 +34,7 @@
                             :type="scope.row.loginStatus == 1 ? 'danger' : 'primary'" size="small"
                             :disabled="scope.row.loginStatus == 1 ? true : false">修改钱包地址</el-button>
                         <el-button :type="scope.row.loginStatus == 1 ? 'danger' : 'primary'" size="small"
-                            @click="openNum(scope.row)" :disabled="scope.row.loginStatus == 1 ? true : false">
+                            @click="openNum(scope.row)" :disabled="scope.row.loginStatus == 1 ? true : false" v-if="scope.row.status">
                             修改分成比例</el-button>
                         <el-button :type="scope.row.loginStatus == 1 ? 'danger' : 'primary'" size="small"
                             :disabled="scope.row.loginStatus == 1 ? true : false" @click="freeze(scope.row)">冻结
