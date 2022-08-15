@@ -34,10 +34,8 @@ export default {
 </script>
 <style scoped>
 /deep/ .el-tabs__item {
-    /* width: 48.8vw; */
     line-height: 7vw;
     height: 7vw ;
-    /* margin: 6.66666667vw auto 0; */
     text-align: center;
     font-size: 4.26666667vw !important;
     font-weight: 700;
