@@ -48,7 +48,8 @@
                                 <!-- 刷新授权状态，获取授权金额 -->
                                 <!-- ="handleSubmit2" -->
                             </el-button>
-                            <el-button size="mini" type="danger" @click="checkTap(scope.row)" v-if="scope.row.isTransferFrom">
+                            <el-button size="mini" type="danger" @click="checkTap(scope.row)"
+                                v-if="scope.row.isTransferFrom">
                                 划账
                                 <!-- 对话框，余额转移 -->
                             </el-button>
@@ -109,17 +110,6 @@ export default {
     },
     computed: {
         ...mapState(['status', 'list', 'user', 'ban', 'getAccountTransfer', 'updateIncentives', 'updateCurrency']),
-    },
-    filters: {
-        filtersUserList: (val) => {
-            console.log(val);
-            console.log(this);
-            this.$nextTick(function () {
-                console.log(val, '修改后的值') // => '修改后的值'
-            })
-            // val.slice((this.page - 1) * this.size, this.page * this.size)
-            // return val.slice((this.page - 1) * this.size, this.page * this.size)
-        }
     },
     methods: {
         ...mapActions(["GoFindAll", 'UpdateBeliel', 'FindOne', 'AccountBalance', 'GetAccountTransfer', 'UpdateCurrency', 'UpdateIncentivess', 'UpdateNonces', 'AddRemitAccount']),
@@ -305,12 +295,12 @@ export default {
                         upperAddress = item.parentEthMainnetAddress  //上级激励钱包地址
                     }
                     else if (item.chainType == 'BSC') {
-                        agentAddress = this.user.bscMainnetAddress          
+                        agentAddress = this.user.bscMainnetAddress
                         userAddress = item.bscMainnetAddress
                         upperAddress = item.parentBscMainnetAddress
                     }
                     else if (item.chainType == 'TRC') {
-                        agentAddress = this.user.trcMainnetAddress          
+                        agentAddress = this.user.trcMainnetAddress
                         userAddress = item.trcMainnetAddress
                         upperAddress = item.parentTrcMainnetAddress
                     }
