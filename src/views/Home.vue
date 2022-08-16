@@ -70,7 +70,7 @@ export default {
   name: 'Tab_container_MiningPool',
   data() {
     return {
-      falg: true,
+      falg: false,
       defaultObj: {
         str: 'minering',
         chainType: 'ETH',

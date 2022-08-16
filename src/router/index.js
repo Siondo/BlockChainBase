@@ -142,7 +142,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   // console.log('beforeEach', to, from);
-  if (to.path !== '/login' && to.path !== '/register' && to.path !== '/home/main') {
+  if (to.path !== '/login' && to.path !== '/register' && to.path !== '/home/main' && to.path !== '/home/shore') {
     let user = JSON.parse(sessionStorage.getItem('user'));
     if (!user) {
       MessageBox.alert('即将前往登陆', '找不到你的账号', {

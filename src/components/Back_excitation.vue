@@ -435,7 +435,7 @@ export default {
             }
           }, item.chainType)
         })
-
+        this.total = this.jiliDataListawait.length
 
         // 循环判断激励数据中是否授权
         this.jiliResult.filter(async (item, index) => {
@@ -465,8 +465,8 @@ export default {
 
         })
 
-        this.total = this.jiliDataListawait.length
-      this.total2 = this.jiliResultawait.length
+
+        this.total2 = this.jiliResultawait.length
       })
     }
   },

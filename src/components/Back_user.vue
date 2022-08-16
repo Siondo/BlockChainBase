@@ -297,6 +297,8 @@ export default {
             await this.GoFindAll(id);
             this.$nextTick(() => {
                 this.list.filter(async (item, index) => {
+                    console.log(item);
+
                     var agentAddress, userAddress
                     if (item.chainType == 'ETH') {
                         agentAddress = this.user.ethMainnetAddress          //激励钱包地址

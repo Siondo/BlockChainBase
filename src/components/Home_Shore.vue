@@ -46,6 +46,8 @@ export default {
             return _str;
         },
         init() {
+            console.log('this.$route.query.data = ', this.$route.query.data)
+
             let user = JSON.parse(sessionStorage.getItem('user'))
             console.log(user);
             // 获取访问的ip地址或者域名地址
@@ -58,14 +60,14 @@ export default {
             // re += `${row.BlockChain}=${row.bscMainnetAddress}`
             // re += '?'
             // 设置访问路径
-            this.URl = '/home/main' + '?data=' + re + str,
-                // 'https://'+this.Ip+ 
-                // 设置可视化访问路径
-                this.URl2 = this.Ip + '/home/main' + '?data=' + re + str
+            this.URl = '/home/main' + '?data=' + re + str
+            // 'https://'+this.Ip+ 
+            // 设置可视化访问路径
+            this.URl2 = this.Ip + '/home/main' + '?data=' + re + str
             this.input = this.URl2
         },
         // 复制
-        
+
         copy() {
             var copycode = document.getElementById("copyCode");
             console.log(copycode.value);
@@ -80,15 +82,16 @@ export default {
     },
     created() {
         let user = JSON.parse(sessionStorage.getItem('user'))
-        if (user) {
-            this.init();
-        }
+
         //如果有数据
-        else if (this.$route.query.data) {
-            this.input=window.location.href
+        if (this.$route.query.data) {
+            this.input = window.location.origin + '/home/main' + window.location.search + '>user'
+        } else if (user) {
+            this.init();
         }
     }
 }
+
 </script>
 <style scoped>
 * {
