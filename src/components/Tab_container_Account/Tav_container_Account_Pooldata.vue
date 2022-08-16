@@ -32,19 +32,17 @@ export default {
     },
     data() {
         return {
-            defaultObj: {
-                str: 'minering',
-                chainType: 'ETH',
-                url: 'https://ethereum.org'
-            },
+            defaultObj:{}
         };
     },
     methods: {
 
     },
-    created() {
-        let defaultObj = JSON.parse(sessionStorage.getItem('defaultObj'))
-        this.defaultObj = defaultObj;
+    created(){
+        let defaultObj=JSON.parse(sessionStorage.getItem('defaultObj'))
+        if (defaultObj) {
+            this.defaultObj = defaultObj;
+        }
     }
 };
 </script>
