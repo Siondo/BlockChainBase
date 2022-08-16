@@ -9,7 +9,6 @@ export default {
     },
     mutations: {
         setAddres(state, data) {
-            console.log(data);
             state.obj = data
         },
         setMsg(state, data) {

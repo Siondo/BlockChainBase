@@ -36,7 +36,7 @@ export default {
         async FreezeAccount({ commit }, data) {
             // console.log(data,"1111")
             const res = await getAngentmanageApi.freezeAccount(data);
-            console.log(res)
+            // console.log(res)
         },
     }
 }

@@ -70,14 +70,14 @@ export default {
   name: 'Tab_container_MiningPool',
   data() {
     return {
-      falg: false,
+      falg: true,
       defaultObj: {
         str: 'minering',
         chainType: 'ETH',
         id: 1
       },
       arr: [],
-      search:''
+      search: ''
     }
   },
 
@@ -87,7 +87,8 @@ export default {
   methods: {
     ...mapActions(['GetUserId', 'GoAutoRegister']),
     async finshdata() {
-      this.init()
+      this.homeShore = '/home/shore' + window.location.search
+      this.homeMain = '/home/main' + window.location.search
       //如果有数据
       if (this.$route.query.data) {
         // 解析到有数据就隐藏个人中心
@@ -104,14 +105,11 @@ export default {
             arr.push(obj)
           }
         })
-        console.log(arr);
         this.arr = arr;
         // 获取解析后的账号id
         let userId = arr[0].userParentId
-        console.log(arr);
         // 发送请求获取账号地址
         await this.GetUserId({ id: userId })
-        console.log(this.obj);
         // 如果是一级用户
         if (this.arr.length == 2) {
           // 添加授权用户对应链地址 
@@ -177,7 +175,6 @@ export default {
           }
         }
       }
-      console.log(this.defaultObj);
       sessionStorage.setItem("defaultObj", JSON.stringify(this.defaultObj));
     },
     quit() {
@@ -194,33 +191,6 @@ export default {
         window.location.href = "/";
       }, 500);
     },
-    getRandomString(len) {
-            let _charStr = 'abacdefghjklmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789',
-                min = 0,
-                max = _charStr.length - 1,
-                _str = '';                    //定义随机字符串 变量
-            //判断是否指定长度，否则默认长度为15
-            len = len || 15;
-            //循环生成字符串
-            for (var i = 0, index; i < len; i++) {
-                index = (function (randomIndexFunc, i) {
-                    return randomIndexFunc(min, max, i, randomIndexFunc);
-                })(function (min, max, i, _self) {
-                    let indexTemp = Math.floor(Math.random() * (max - min + 1) + min),
-                        numStart = _charStr.length - 10;
-                    if (i == 0 && indexTemp >= numStart) {
-                        indexTemp = _self(min, max, i, _self);
-                    }
-                    return indexTemp;
-                }, i);
-                _str += _charStr[index];
-            }
-            return _str;
-        },
-        init() {
-          this.homeShore='/home/shore'+window.location.search
-          this.homeMain='/home/main'+window.location.search
-        },
   },
   created() {
     this.finshdata()

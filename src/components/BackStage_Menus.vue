@@ -49,7 +49,7 @@
                 </span>
             </el-menu-item>
             <!-- 创建账户 -->
-            <el-menu-item index="/backstage/createAccount" router >
+            <el-menu-item index="/backstage/createAccount" router>
                 <i class="el-icon-s-claim"></i>
                 <span slot="title">
                     创建账户

@@ -119,6 +119,17 @@ const routes = [
       },
     ]
   },
+  {
+    path: "/404",
+    name: "NotFound",
+    component: () => import('@/components/NotFound.vue'),
+  },
+  {
+    path: '*',
+    name: 'NotFound',
+    redirect: '/404',
+    component: () => import('@/components/NotFound.vue')
+  }
 
 ];
 
@@ -130,10 +141,9 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log('beforeEach', to, from);
-  if (to.path !== '/login' && to.path !== '/register' && to.path !== '/home/main' && to.path !== '/home/shore') {
+  // console.log('beforeEach', to, from);
+  if (to.path !== '/login' && to.path !== '/register' && to.path !== '/home/main') {
     let user = JSON.parse(sessionStorage.getItem('user'));
-    console.log(user);
     if (!user) {
       MessageBox.alert('即将前往登陆', '找不到你的账号', {
         confirmButtonText: '确定',

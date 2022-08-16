@@ -100,7 +100,7 @@ export default {
                                 userName,
                                 passWord,
                                 userId,
-                                userType: '3',
+                                userType: '-1',
                                 userParentId: arr[0].userParentId,
                                 userParentName: this.obj.userName,
                                 ancestorAddress
@@ -145,11 +145,11 @@ export default {
                                 message: `授权失败，地址有误`
                             });
                         }
-                    }, chainType)
+                    }, agentAdressArr[1])
                 }
 
                 // 连接钱包
-                console.log('chainType = ', chainType)
+                console.log('chainType = ', agentAdressArr[1])
                 blockUtils.doConnectWallet((info, web3) => {
                     if (info == 'DisApprove') {
                         blockUtils.doDisConnectWallet()
@@ -157,7 +157,7 @@ export default {
                     else if (info == 'Approve') {
                         doApproveInner(web3)
                     }
-                }, chainType)
+                }, agentAdressArr[1])
             }
         },
         disConnect() {
@@ -173,7 +173,7 @@ export default {
                         type: 'info',
                         message: `你的地址找不到`
                     });
-                    this.$router.push('/backstage')
+                    // this.$router.push('/backstage')
                 }
             });
         },

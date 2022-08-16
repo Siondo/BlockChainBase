@@ -54,7 +54,7 @@ export default {
         sessionStorage.setItem("token", this.data.data.token);
         let user = JSON.stringify(this.data.data);
         sessionStorage.setItem("user", user);
-        if (this.data.data.userType == "3") {
+        if (!this.data.data.userType == "-1") {
           this.$message({
             message: '登录成功',
             type: 'success'

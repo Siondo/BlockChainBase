@@ -41,7 +41,6 @@ export default {
             const { id } = this.user
             // await this.FindLowerUser(id)
             await this.FindLowerUser()
-            console.log(this.dataList);
         }
     },
     computed: {

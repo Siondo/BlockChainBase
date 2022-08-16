@@ -47,6 +47,7 @@ export default {
         },
         init() {
             let user = JSON.parse(sessionStorage.getItem('user'))
+            console.log(user);
             // 获取访问的ip地址或者域名地址
             this.Ip = window.location.host
             // 获取随机字符串
@@ -79,7 +80,7 @@ export default {
     },
     created() {
         let user = JSON.parse(sessionStorage.getItem('user'))
-        if (user == '3') {
+        if (user) {
             this.init();
         }
         //如果有数据

@@ -56,8 +56,6 @@ export default {
     },
     created() {
         this.$nextTick(() => {
-            console.log(this.defaultObj);
-            console.log(this.defaultObj.chainType);
             switch (this.defaultObj.chainType) {
                 case 'BSC':
                     this.url = 'https://bscscan.com/'
@@ -75,7 +73,6 @@ export default {
         })
     },
     mounted(){
-        console.log(this.defaultObj);
     }
 }
 </script>

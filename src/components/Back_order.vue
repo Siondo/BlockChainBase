@@ -47,7 +47,9 @@
                 </el-table-column>
                 <el-table-column prop="sendAddress" label="发款钱包地址">
                 </el-table-column>
-                <el-table-column prop="createTime" label="修改时间" width="300" fixed="right">
+                <el-table-column prop="hash" label="交易地址">
+                </el-table-column>
+                <el-table-column prop="createTime" label="修改时间" width="200" fixed="right">
                 </el-table-column>
             </el-table>
 

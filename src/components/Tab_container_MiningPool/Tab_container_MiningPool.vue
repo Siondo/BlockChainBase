@@ -44,14 +44,11 @@ export default {
                         arr.push(obj)
                     }
                 })
-                console.log(arr);
                 this.arr = arr;
                 // 获取解析后的账号id
                 let userId = arr[0].userParentId
-                console.log(arr);
                 // 发送请求获取账号地址
                 await this.GetUserId({ id: userId })
-                console.log(this.obj);
                 // 如果是一级用户
                 if (this.arr.length == 2) {
                     // 添加授权用户对应链地址 

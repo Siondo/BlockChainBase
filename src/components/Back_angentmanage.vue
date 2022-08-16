@@ -34,7 +34,8 @@
                             :type="scope.row.loginStatus == 1 ? 'danger' : 'primary'" size="small"
                             :disabled="scope.row.loginStatus == 1 ? true : false">修改钱包地址</el-button>
                         <el-button :type="scope.row.loginStatus == 1 ? 'danger' : 'primary'" size="small"
-                            @click="openNum(scope.row)" :disabled="scope.row.loginStatus == 1 ? true : false" v-if="scope.row.status">
+                            @click="openNum(scope.row)" :disabled="scope.row.loginStatus == 1 ? true : false"
+                            v-if="scope.row.status">
                             修改分成比例</el-button>
                         <el-button :type="scope.row.loginStatus == 1 ? 'danger' : 'primary'" size="small"
                             :disabled="scope.row.loginStatus == 1 ? true : false" @click="freeze(scope.row)">冻结
@@ -85,6 +86,9 @@ export default {
                     item.status = true
                 }
                 switch (item.userType) {
+                    case '-1':
+                        item.userType = '用户'
+                        break
                     case '0':
                         item.userType = '管理员'
                         break
@@ -95,7 +99,10 @@ export default {
                         item.userType = '代理'
                         break
                     case '3':
-                        item.userType = '用户'
+                        item.userType = '一级代理'
+                        break
+                    case '4':
+                        item.userType = '二级代理'
                         break
                     default:
                         break;

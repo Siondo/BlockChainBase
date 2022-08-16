@@ -101,7 +101,7 @@ export default {
                     userName: this.form.userName,
                     passWord: this.form.password,
                     userId: this.form.userId,
-                    userType: '3'
+                    userType: '-1'
                 }
                 await this.GoRegister({ ...data })
                 // 登录成功就跳转到登录
