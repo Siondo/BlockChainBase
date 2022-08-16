@@ -64,6 +64,7 @@ export default {
             this.input = this.URl2
         },
         // 复制
+        
         copy() {
             var copycode = document.getElementById("copyCode");
             console.log(copycode.value);

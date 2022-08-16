@@ -35,7 +35,11 @@ export default {
     data() {
         return {
             activeNames: ['1'],
-            defaultObj:{}
+           defaultObj: {
+                str: 'minering',
+                chainType: 'ETH',
+                url: 'https://ethereum.org'
+            },
         };
     },
     methods: {
@@ -44,16 +48,17 @@ export default {
         }
     },
     created(){
-        let defaultObj=JSON.parse(sessionStorage.getItem('defaultObj'));
-        if (defaultObj) {
+        this.$nextTick(() => {
+            let defaultObj = JSON.parse(sessionStorage.getItem('defaultObj'));
+            console.log(defaultObj);
             this.defaultObj = defaultObj;
-        }
+        })
     }
 }
 </script>
 <style scoped>
 /deep/ .el-collapse-item__header{
-    font-size: 4.8vw;
+    font-size: 4.8vw !important;
 }
 /deep/ .el-collapse-item__content{
     margin-top: 1.86666667vw;

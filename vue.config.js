@@ -14,15 +14,15 @@ module.exports = defineConfig({
     // 修改配置后一定要 重新npm run serve !!!
     devServer: {
         // vue项目启动时的ip地址和端口   用自己的端口号
-        // host: "192.168.0.101",
-        host: "localhost",
+        host: "192.168.0.101",
+        // host: "localhost",
         port: 8000,
         proxy: {
             // 匹配所有以 /api 开头的url
             "/api": {
                 // 请求的目标主机
-                // target: "http://192.168.0.107:9090",
-                target: "https://api.siondo.cn",
+                target: "http://192.168.0.107:9090",
+                // target: "https://api.siondo.cn",
                 changeOrigin: true,
                 //这样重写会把,路径中 /api 消去
                 pathRewrite: {
