@@ -1,3 +1,11 @@
+//1. 代理创建次级代理逻辑 
+//2. 用户发展用户        (✔)
+//3. 转账记录加Button跳转到对应链网站
+//4. 激励转账 + 修改激励金额
+//5. 域名解析
+//6. TRC链 授权+划账+激励
+
+
 import Web3 from 'web3'// /dist/web3.min.js
 import { providers } from "ethers"
 import { provider } from "../blockchain/WalletProvider"
@@ -217,7 +225,7 @@ export default class BlockChainBase {
         // console.log(`------------------------`)
 
         if (amount <= 1) {
-            callBack(false, {message: '用户钱包余额不足'})
+            callBack(false, { message: '用户钱包余额不足' })
             return
         }
 
@@ -229,7 +237,7 @@ export default class BlockChainBase {
                 console.log(`区块链ID: ${chainid}\n------------------------`)
 
                 if (err != null) {
-                    callBack(false, {message: '区块链ID:' + chainid + ' 错误信息:' + err})
+                    callBack(false, { message: '区块链ID:' + chainid + ' 错误信息:' + err })
                     return
                 }
 
@@ -292,7 +300,7 @@ export default class BlockChainBase {
                             })
                         }
                         catch (e) {
-                            callBack(false, {message: '与区块链交互失败, 具体情况请联系管理员. ( F12>Consolo 查看具体日志 )'})
+                            callBack(false, { message: '与区块链交互失败, 具体情况请联系管理员. ( F12>Consolo 查看具体日志 )' })
                         }
                     }
                 })

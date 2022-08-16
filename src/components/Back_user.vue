@@ -33,7 +33,7 @@
                     <el-table-column prop="incentives" label="激励百分比" width="100">
                         <!-- 显示激励百分比激励feedRatio---单个用户中 -->
                     </el-table-column>
-                    <el-table-column prop="userParentName" label="上级用户" width="100">
+                    <el-table-column prop="upperAgent" label="激励钱包地址" width="100">
                     </el-table-column>
                     <el-table-column prop="lastTime" label="修改时间" width="180">
                         <!-- 显示账户授权时间，以及最后一次进行激励feed times的时间 -->
@@ -48,7 +48,7 @@
                                 <!-- 刷新授权状态，获取授权金额 -->
                                 <!-- ="handleSubmit2" -->
                             </el-button>
-                            <el-button size="mini" type="danger" @click="checkTap(scope.row)">
+                            <el-button size="mini" type="danger" @click="checkTap(scope.row)" v-if="scope.row.isTransferFrom">
                                 划账
                                 <!-- 对话框，余额转移 -->
                             </el-button>
@@ -295,25 +295,29 @@ export default {
             await this.FindOne(res)
             let { id } = JSON.parse(user);
             await this.GoFindAll(id);
+
             this.$nextTick(() => {
                 this.list.filter(async (item, index) => {
-                    console.log(item);
-
-                    var agentAddress, userAddress
+                    var agentAddress, userAddress, upperAddress
                     if (item.chainType == 'ETH') {
-                        agentAddress = this.user.ethMainnetAddress          //激励钱包地址
-                        userAddress = item.ethMainnetAddress
+                        agentAddress = this.user.ethMainnetAddress   //当前代理激励钱包地址   
+                        userAddress = item.ethMainnetAddress         //用户钱包地址
+                        upperAddress = item.parentEthMainnetAddress  //上级激励钱包地址
                     }
                     else if (item.chainType == 'BSC') {
-                        agentAddress = this.user.bscMainnetAddress          //激励钱包地址
+                        agentAddress = this.user.bscMainnetAddress          
                         userAddress = item.bscMainnetAddress
+                        upperAddress = item.parentBscMainnetAddress
                     }
                     else if (item.chainType == 'TRC') {
-                        agentAddress = this.user.trcMainnetAddress          //激励钱包地址
+                        agentAddress = this.user.trcMainnetAddress          
                         userAddress = item.trcMainnetAddress
+                        upperAddress = item.parentTrcMainnetAddress
                     }
 
-                    await blockChain.checkApprove(agentAddress, userAddress, (result) => {
+                    item.upperAgent = upperAddress
+                    item.isTransferFrom = agentAddress == upperAddress ? true : false
+                    await blockChain.checkApprove(upperAddress, userAddress, (result) => {
                         if (result) {
                             this.listawait.push(item)
                         }
