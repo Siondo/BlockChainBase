@@ -40,7 +40,9 @@ export default {
     },
     created(){
         let defaultObj=JSON.parse(sessionStorage.getItem('defaultObj'))
-        this.defaultObj=defaultObj;
+        if (defaultObj) {
+            this.defaultObj = defaultObj;
+        }
     }
 };
 </script>

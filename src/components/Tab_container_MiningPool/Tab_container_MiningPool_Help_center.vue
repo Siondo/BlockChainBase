@@ -45,14 +45,15 @@ export default {
     },
     created(){
         let defaultObj=JSON.parse(sessionStorage.getItem('defaultObj'));
-        console.log(defaultObj);
-        this.defaultObj=defaultObj;
+        if (defaultObj) {
+            this.defaultObj = defaultObj;
+        }
     }
 }
 </script>
 <style scoped>
 /deep/ .el-collapse-item__header{
-    font-size: 4.8vw !important;
+    font-size: 4.8vw;
 }
 /deep/ .el-collapse-item__content{
     margin-top: 1.86666667vw;
