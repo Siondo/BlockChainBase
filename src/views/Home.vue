@@ -22,7 +22,7 @@
         <span id="lang_title">minering</span>
       </div>
       <div class="me">
-        <router-link to="/home/me" v-if="this.falg">
+        <router-link to="/home/me" v-if="!this.falg">
           <a href="">
             <i class="el-icon-user-solid"></i>
             ACCOUNT
