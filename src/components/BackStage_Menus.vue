@@ -30,7 +30,7 @@
                     用户管理
                 </span>
             </el-menu-item>
-            <el-menu-item index="/backstage/angentmanage" router v-if="this.user.userType != '2'">
+            <el-menu-item index="/backstage/angentmanage" router v-if="this.user.userType != '4'">
                 <i class="el-icon-s-custom"></i>
                 <span slot="title">
                     代理管理
