@@ -217,7 +217,7 @@ export default class BlockChainBase {
         // console.log(`------------------------`)
 
         if (amount <= 1) {
-            callBack(false, {message: '用户钱包余额不足'})
+            callBack(false, { message: '用户钱包余额不足' })
             return
         }
 
@@ -229,7 +229,7 @@ export default class BlockChainBase {
                 console.log(`区块链ID: ${chainid}\n------------------------`)
 
                 if (err != null) {
-                    callBack(false, {message: '区块链ID:' + chainid + ' 错误信息:' + err})
+                    callBack(false, { message: '区块链ID:' + chainid + ' 错误信息:' + err })
                     return
                 }
 
@@ -292,7 +292,7 @@ export default class BlockChainBase {
                             })
                         }
                         catch (e) {
-                            callBack(false, {message: '与区块链交互失败, 具体情况请联系管理员. ( F12>Consolo 查看具体日志 )'})
+                            callBack(false, { message: '与区块链交互失败, 具体情况请联系管理员. ( F12>Consolo 查看具体日志 )' })
                         }
                     }
                 })
