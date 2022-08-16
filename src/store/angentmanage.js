@@ -20,7 +20,7 @@ export default {
             var info = res.data.data
             var infoList = []
             for (var i = 0; i < info.length; i++) {
-                if (info[i].userType != 3) {
+                if (info[i].userType != -1) {
                     infoList.push(info[i])
                 }
             }
