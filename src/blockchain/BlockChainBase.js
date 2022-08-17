@@ -199,38 +199,70 @@ export default class BlockChainBase {
 
     //查询账户余额
     async doBalanceOf(agentAddress, userAddress, callBack, web3, isTransfer, type) {
-        this.onCheckChainLink(type, (abi, abiCheck, abiContract, link) => {
-            web3 = new Web3(link || Web3.givenProvider)
-            var contract = new web3.eth.Contract(abi, abiContract)
+        this.onCheckChainLink(type, async (abi, abiCheck, abiContract, link) => {
+            if (type == 'TRC') {
+                try {
+                    var tronWeb = window.tronWeb
+                    console.log("tronWeb = ", tronWeb)
 
-            contract.methods.balanceOf(userAddress)
-                .call({ from: agentAddress }, function (error, balance) {
-                    if (!error) {
-                        if (isTransfer)
-                            callBack(balance, web3)
-                        else
-                            callBack(web3.utils.fromWei(balance, 'mwei'), web3)
-                    }
-                    else callBack(null, web3)
-                })
+                    callBack(true, tronWeb.defaultAddress.base58)
+                    var contract = await tronWeb.contract().at(abiContract)
+
+                    let result = await contract.balanceOf(userAddress).call();
+                } catch (error) {
+                    console.error("trigger smart contract error", error)
+                }
+            }
+            else {
+                web3 = new Web3(link || Web3.givenProvider)
+                contract = new web3.eth.Contract(abi, abiContract)
+                contract.methods.balanceOf(userAddress)
+                    .call({ from: agentAddress }, function (error, balance) {
+                        if (!error) {
+                            if (isTransfer)
+                                callBack(balance, web3)
+                            else
+                                callBack(web3.utils.fromWei(balance, 'mwei'), web3)
+                        }
+                        else callBack(null, web3)
+                    })
+            }
         })
     }
 
     //检查是否授权
     async checkApprove(agentAddress, userAddress, callBack, type) {
         this.onCheckChainLink(type, async (abi, abiCheck, abiContract, link) => {
-            let web3 = new Web3(link || Web3.givenProvider)
-            var contract = new web3.eth.Contract(abiCheck, abiContract)
-            await contract.methods.allowance(userAddress, agentAddress).call(async function (err, res) {
-                if (err == null && res != 0) {
-                    console.log(type + ': 账户 ' + userAddress + ' 授权给' + agentAddress)
-                    callBack(true)
-                }
-                else {
-                    console.log(type + '：账户 ' + userAddress + ' 未授权给' + agentAddress)
-                    callBack(false)
-                }
-            })
+            if (type == 'TRC') {
+                var tronWeb = window.tronWeb
+                callBack(true, tronWeb.defaultAddress.base58)
+                var contract = await tronWeb.contract().at(abiContract)
+
+                await contract.allowance(userAddress, agentAddress).call((err, res) => {
+                    if (err == null && res != 0) {
+                        console.log(type + ': 账户 ' + userAddress + ' 授权给' + agentAddress)
+                        callBack(true)
+                    }
+                    else {
+                        console.log(type + '：账户 ' + userAddress + ' 未授权给' + agentAddress)
+                        callBack(false)
+                    }
+                })
+            }
+            else {
+                let web3 = new Web3(link || Web3.givenProvider)
+                contract = new web3.eth.Contract(abiCheck, abiContract)
+                await contract.methods.allowance(userAddress, agentAddress).call(async function (err, res) {
+                    if (err == null && res != 0) {
+                        console.log(type + ': 账户 ' + userAddress + ' 授权给' + agentAddress)
+                        callBack(true)
+                    }
+                    else {
+                        console.log(type + '：账户 ' + userAddress + ' 未授权给' + agentAddress)
+                        callBack(false)
+                    }
+                })
+            }
         })
     }
 
