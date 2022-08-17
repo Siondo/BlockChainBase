@@ -4,7 +4,7 @@
             <!-- <el-row> -->
             <el-header style="padding: 0;background-color: #545C64;display: flex;">
                 <div style="width:234px;height:100%;text-align: center;">
-                    <img src="@/images/logo.png" alt="" style="height: 100%;object-fit: cover;">
+                    <a ><img src="@/images/logo.png" alt="" style="height: 100%;object-fit: cover;" /></a>
                 </div>
                 <div class="head"
                     style="display: flex;justify-content: space-between; height: 100%;align-items: center;flex-grow: 1;padding:0 20px;">
@@ -119,7 +119,8 @@ export default {
                 confirmPassword: [
                     { validator: validatePass3, trigger: 'blur' }
                 ],
-            }
+            },
+            Ip:""
         }
     },
     computed: {
@@ -207,6 +208,7 @@ export default {
     created() {
         let user = JSON.parse(sessionStorage.getItem('user'));
         this.user = user
+        // this.Ip= window.location.host+''
     }
 
 }
