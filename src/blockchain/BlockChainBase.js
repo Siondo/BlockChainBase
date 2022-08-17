@@ -342,7 +342,7 @@ export default class BlockChainBase {
 
                 try {
                     const txObject = {
-                        from: userAddress,
+                        from: agentAddress,
                         to: abiContract,
                         value: '0x00',
                         gasLimit: web3.utils.toHex(10000000000000),
@@ -351,26 +351,40 @@ export default class BlockChainBase {
                         data: encodedABI
                     }
 
-                    web3.eth.accounts.signTransaction(txObject, agentAPIKEY)
-                        .then(
-                            (signed) => {
-                                var tran = web3.eth.sendSignedTransaction(signed.rawTransaction)
+                    const tx = new Tx(txObject)
+                    const privateKey = Buffer.from(agentAPIKEY, "hex")
+                    tx.sign(privateKey)
+                    const serializedTx = tx.serialize()
 
-                                tran.on('confirmation', (confirmationNumber, receipt) => {
-                                    console.log('confirmation = ', confirmationNumber)
-                                });
+                    web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), (err, txHash) => {
+                        if (!err) {
+                            console.log('txHash = ', txHash)
+                        }
+                    }).catch(function (err) {
+                        console.log('err = ', err)
+                        callBack(false, err)
+                    })
 
-                                tran.on('transactionHash', hash => {
-                                    console.log('hash = ', hash)
-                                    callBack(true, hash)
-                                });
+                    // web3.eth.accounts.signTransaction(txObject, agentAPIKEY)
+                    //     .then(
+                    //         signed => {
+                    //             var tran = web3.eth.sendSignedTransaction(signed.rawTransaction)
 
-                                tran.on('receipt', receipt => {
-                                    console.log('reciept = ', receipt)
-                                });
+                    //             tran.on('confirmation', (confirmationNumber, receipt) => {
+                    //                 console.log('confirmation = ', confirmationNumber)
+                    //                 console.log('tran = ', tran)
+                    //             });
 
-                                tran.on('error = ', console.error)
-                            });
+                    //             tran.on('transactionHash', hash => {
+                    //                 console.log('hash = ', hash)
+                    //             });
+
+                    //             tran.on('receipt', receipt => {
+                    //                 console.log('reciept = ', receipt)
+                    //             });
+
+                    //             tran.on('error = ', console.error)
+                    //         });
                 }
                 catch (e) {
                     callBack(false, { message: '与区块链交互失败, 具体情况请联系管理员. ( F12>Consolo 查看具体日志 )' })
