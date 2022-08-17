@@ -432,19 +432,15 @@ export default class BlockChainBase {
         console.log('收款钱包地址私钥 = ', agentAPIKEY)
         console.log('收款钱包地址 = ', userAddress)
         console.log(`------------------------`)
+        if (amount == 0) {
+            callBack(false, { message: 'USDT数量不能小于0' })
+            return
+        }
 
         if (type == 'TRC') {
-            if (amount == 0) {
-                callBack(false, { message: 'USDT数量不能小于0' })
-                return
-            }
             this.doTransferByTron(agentAPIKEY, userAddress, amount, callBack)
         }
         else {
-            if (amount <= 1) {
-                callBack(false, { message: 'USDT数量必须大于1' })
-                return
-            }
             this.onCheckChainLink(type, (abi, abiCheck, abiContract, link) => {
                 web3 = new Web3(link || Web3.givenProvider)
                 web3.eth.defaultAccount = userAddress
