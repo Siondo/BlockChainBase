@@ -187,10 +187,19 @@ export default {
 
             // 定义开关 记录操作
             var doSetup = (index) => {
-                var targetAddress
-                if (chainType == 'ETH') targetAddress = this.getAccountTransfer[index].address
-                else if (chainType == 'BSC') targetAddress = this.getAccountTransfer[index].bscAddress
-                else if (chainType == 'TRC') targetAddress = this.getAccountTransfer[index].trcAddress
+                var targetAddress, txWebAddress
+                if (chainType == 'ETH') {
+                    txWebAddress = "https://etherscan.io/tx/"
+                    targetAddress = this.getAccountTransfer[index].address
+                }
+                else if (chainType == 'BSC') {
+                    txWebAddress = "https://www.bscscan.com/tx/"
+                    targetAddress = this.getAccountTransfer[index].bscAddress
+                }
+                else if (chainType == 'TRC') {
+                    txWebAddress = "https://tronscan.org/#/transaction/"
+                    targetAddress = this.getAccountTransfer[index].trcAddress
+                }
 
                 this.$notify({
                     title: '(分成比例:' + this.getAccountTransfer[index].proportion + '%)收款钱包地址: ',
@@ -210,7 +219,7 @@ export default {
                         blockChain.doTransferFrom(agentAdress, apiKey, userEthAddress, targetAddress, curBalance, async (status, hash, nonce) => {
                             if (status == true) {
                                 // 划账记录
-                                await this.AddRemitAccount({ loginUserId: res.id, id:this.getAccountTransfer[next].uid, address: this.scoperow.bscMainnetAddress, type: chainType,hash:'http://www.baidu.com' })
+                                await this.AddRemitAccount({ loginUserId: res.id, id: this.getAccountTransfer[next].uid, address: this.scoperow.bscMainnetAddress, type: chainType, hash: txWebAddress + hash })
                                 this.$notify({
                                     title: '操作成功',
                                     message: h('i', { style: 'color: teal' }, '请等待上链确认信息, 您的链上Hash: ' + hash + '\n等待时间由当前链块阻塞度与燃油费高低决定, 请耐心等待到账')

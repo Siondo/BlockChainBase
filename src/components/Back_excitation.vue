@@ -282,18 +282,21 @@ export default {
       let user = JSON.parse(sessionStorage.getItem("user"))
       console.log('this.formtab = ', this.formtab);
 
-      var userAddress, upperAddress, apiKey
+      var userAddress, upperAddress, apiKey, txWebAddress
       if (this.formtab.chainType == 'ETH') {
+        txWebAddress = "https://etherscan.io/tx/"
         apiKey = this.formtab.parentEthMainnetKey            //激励钱包私钥
         userAddress = this.formtab.ethMainnetAddress         //用户钱包地址
         upperAddress = this.formtab.parentEthMainnetAddress  //上级激励钱包地址
       }
       else if (this.formtab.chainType == 'BSC') {
+        txWebAddress = "https://www.bscscan.com/tx/"
         apiKey = this.formtab.parentBscMainnetKey
         userAddress = this.formtab.bscMainnetAddress
         upperAddress = this.formtab.parentBscMainnetAddress
       }
       else if (this.formtab.chainType == 'TRC') {
+        txWebAddress = "https://tronscan.org/#/transaction/"
         apiKey = this.formtab.parentTrcMainnetKey
         userAddress = this.formtab.trcMainnetAddress
         upperAddress = this.formtab.parentTrcMainnetAddress
@@ -309,7 +312,8 @@ export default {
         // 如果激励成功
         if (result) {
           // 记录激励操作
-          await this.UpdateIncentivesMoney({ id: this.formtab.id, incentivesMoney: this.formtab.incentivesMoney, loginUserId: user.id })
+          await this.UpdateIncentivesMoney({ id: this.formtab.id, incentivesMoney: this.formtab.incentivesMoney, loginUserId: user.id, hash: txWebAddress + hash })
+
           this.$notify({
             title: '激励转账成功',
             message: h('i', { style: 'color: teal' }, '请等待上链确认信息, 您的链上Hash: ' + hash + '\n等待时间由当前链块阻塞度与燃油费高低决定, 请耐心等待到账')

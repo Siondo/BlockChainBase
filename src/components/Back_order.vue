@@ -174,6 +174,7 @@ export default {
             await this.GetHistory({ userType: user.userType, type: 3, pid: user.id })
             if (this.dataList.code == 200) {
                 this.data = this.dataList.data
+                console.log('this.data = ', this.data);
             }
             // 显示修改划账记录
             this.total = this.data.length
