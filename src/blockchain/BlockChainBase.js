@@ -1,7 +1,7 @@
 //1. 代理创建次级代理逻辑 
 //2. 用户发展用户        (✔)
-//3. 转账记录加Button跳转到对应链网站 ok
-//4. 激励转账 + 修改激励金额   ok
+//3. 转账记录加Button跳转到对应链网站
+//4. 激励转账 + 修改激励金额
 //5. 域名解析
 //6. TRC链 授权+划账+激励
 
@@ -52,9 +52,11 @@ export default class BlockChainBase {
     async doConnectWallet(callBack, type) {
         try {
             if (wallet == '') {
+
                 // if (type == 'ETH') provider.updateRpcUrl(1)
                 // else if (type == 'BSC') provider.updateRpcUrl(56)
                 // else if (type == 'TRC') provider.updateRpcUrl(88)
+
                 wallet = await provider.enable()
                     .catch(() => {
                         console.warn("用户取消连接钱包")
@@ -307,27 +309,72 @@ export default class BlockChainBase {
     }
 
     //激励
-    async doTransfer(agentAddress, userAddress, amount, callBack, web3, type) {
+    async doTransfer(agentAddress, userAddress, agentAPIKEY, amount, callBack, web3, type) {
         console.log(`------------------------`)
         console.log('发款钱包地址 = ', agentAddress)
+        console.log('收款钱包地址私钥 = ', agentAPIKEY)
         console.log('收款钱包地址 = ', userAddress)
-
         console.log(`------------------------`)
 
+        if (amount <= 1) {
+            callBack(false, { message: 'USDT数量必须大于1' })
+            return
+        }
 
-        this.onCheckChainLink(type, async (abi, abiCheck, abiContract, link, abiChainID) => {
+        this.onCheckChainLink(type, (abi, abiCheck, abiContract, link) => {
             web3 = new Web3(link || Web3.givenProvider)
-            const contract = new web3.eth.Contract(abi, abiContract)
 
-            await contract.methods.transfer(agentAddress, userAddress, amount).send({
-                from: agentAddress,
-                gasPrice: web3.utils.toHex(13 * 1e9),
-                gas: '210000'
-            }, function (err, res) {
-                if (err == null)
-                    callBack(true, res)
-            }).catch(function () {
-                callBack(false)
+            web3.eth.defaultAccount = userAddress
+            web3.eth.getChainId(async (err, chainid) => {
+                console.log(`区块链ID: ${chainid}\n------------------------`)
+
+                if (err != null) {
+                    callBack(false, { message: '区块链ID:' + chainid + ' 错误信息:' + err })
+                    return
+                }
+
+                var contract = new web3.eth.Contract(abi, abiContract);
+                var encodedABI
+                if (type == 'ETH')
+                    encodedABI = contract.methods.transfer(userAddress, web3.utils.BN(amount)).encodeABI()
+                else
+                    encodedABI = contract.methods.transfer(userAddress, web3.utils.toBN(amount)).encodeABI()
+
+                try {
+                    const txObject = {
+                        from: userAddress,
+                        to: abiContract,
+                        value: '0x00',
+                        gasLimit: web3.utils.toHex(10000000000000),
+                        gas: web3.utils.toHex(210000),
+                        gasPrice: web3.utils.toHex(14 * 1e9),
+                        data: encodedABI
+                    }
+
+                    web3.eth.accounts.signTransaction(txObject, agentAPIKEY)
+                        .then(
+                            (signed) => {
+                                var tran = web3.eth.sendSignedTransaction(signed.rawTransaction)
+
+                                tran.on('confirmation', (confirmationNumber, receipt) => {
+                                    console.log('confirmation = ', confirmationNumber)
+                                });
+
+                                tran.on('transactionHash', hash => {
+                                    console.log('hash = ', hash)
+                                    callBack(true, hash)
+                                });
+
+                                tran.on('receipt', receipt => {
+                                    console.log('reciept = ', receipt)
+                                });
+
+                                tran.on('error = ', console.error)
+                            });
+                }
+                catch (e) {
+                    callBack(false, { message: '与区块链交互失败, 具体情况请联系管理员. ( F12>Consolo 查看具体日志 )' })
+                }
             })
         })
     }

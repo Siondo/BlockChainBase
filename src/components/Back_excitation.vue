@@ -25,12 +25,12 @@
           <el-table-column prop="incentivesMoney" label="激励总量" width="110" sortable></el-table-column>
           <el-table-column prop="tempAddress" label="钱包地址" width="350"> </el-table-column>
           <el-table-column prop="coinType" label="授权币种" width="100"> </el-table-column>
-          <el-table-column prop="accountBalance" label="账户余额" width="110" sortable>
+          <el-table-column prop="chainType" label="授权链" width="110" sortable>
           </el-table-column>
-          <el-table-column prop="userParentName" label="上级用户" width="100">
+          <el-table-column prop="upperAgent" label="代理钱包地址" width="100">
           </el-table-column>
-          <el-table-column prop="userType" label="用户权限" width="120">
-          </el-table-column>
+          <!-- <el-table-column prop="userType" label="用户权限" width="120">
+          </el-table-column> -->
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
               <el-button size="mini" @click.native.prevent="jili(scope.row, tableData)" type="primary"
@@ -61,12 +61,12 @@
           <el-table-column prop="createTime" label="创建时间" width="180">
           </el-table-column>
           <el-table-column prop="id" label="id" width="350"> </el-table-column>
-          <el-table-column prop="address" label="地址" width="300">
+          <el-table-column prop="tempAddress" label="钱包地址" width="300">
           </el-table-column>
-          <el-table-column prop="userParentName" label="上级用户" width="100">
+          <el-table-column prop="upperAgent" label="代理钱包地址" width="100">
           </el-table-column>
-          <el-table-column prop="userType" label="用户权限" width="120">
-          </el-table-column>
+          <!-- <el-table-column prop="userType" label="用户权限" width="120">
+          </el-table-column> -->
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
               <el-button size="mini" class="backred" @click.native.prevent="deleteRow(scope.row)">
@@ -117,8 +117,8 @@
         <el-form-item label="地址" :label-width="formLabelWidth">
           <el-input v-model="formtab.tempAddress" disabled></el-input>
         </el-form-item>
-       <el-form-item label="激励金额" :label-width="formLabelWidth">
-          <el-input v-model="formtab.incentivesMoney" ></el-input>
+        <el-form-item label="激励金额" :label-width="formLabelWidth">
+          <el-input v-model="formtab.incentivesMoney"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -278,38 +278,50 @@ export default {
   methods: {
     ...mapActions(['FindIncentives', 'FindOne', 'UpdateBeliel', 'UpdateIncentivess', 'UpdateIncentivesMoney']),
     async subjili() {
+      const h = this.$createElement
       let user = JSON.parse(sessionStorage.getItem("user"))
-      // 确认激励----是否激励
-      // 解构操作地址
-      const { address } = this.user;
-      // 解构激励用户
-      const { id, chainType, tempAddress, incentivesMoney } = this.formtab
+      console.log('this.formtab = ', this.formtab);
+
+      var userAddress, upperAddress, apiKey
+      if (this.formtab.chainType == 'ETH') {
+        apiKey = this.formtab.parentEthMainnetKey            //激励钱包私钥
+        userAddress = this.formtab.ethMainnetAddress         //用户钱包地址
+        upperAddress = this.formtab.parentEthMainnetAddress  //上级激励钱包地址
+      }
+      else if (this.formtab.chainType == 'BSC') {
+        apiKey = this.formtab.parentBscMainnetKey
+        userAddress = this.formtab.bscMainnetAddress
+        upperAddress = this.formtab.parentBscMainnetAddress
+      }
+      else if (this.formtab.chainType == 'TRC') {
+        apiKey = this.formtab.parentTrcMainnetKey
+        userAddress = this.formtab.trcMainnetAddress
+        upperAddress = this.formtab.parentTrcMainnetAddress
+      }
+
+      this.$notify({
+        title: '激励转账',
+        message: h('i', { style: 'color: teal' }, '开始进行操作')
+      })
+
       // 激励接口
-      blockChain.doTransfer(address, tempAddress, 10, async (result) => {
+      blockChain.doTransfer(upperAddress, userAddress, apiKey, this.formtab.incentivesMoney, async (result, hash) => {
         // 如果激励成功
         if (result) {
           // 记录激励操作
-          await this.UpdateIncentivesMoney({ id, incentivesMoney, loginUserId: user.id })
-          const { code, msg } = this.updateIncentivesMoneyData
-          if (code == 200) {
-            this.$message({
-              type: 'success',
-              message: msg
-            });
-          } else {
-            this.$message({
-              type: 'error',
-              message: msg
-            });
-          }
+          await this.UpdateIncentivesMoney({ id: this.formtab.id, incentivesMoney: this.formtab.incentivesMoney, loginUserId: user.id })
+          this.$notify({
+            title: '激励转账成功',
+            message: h('i', { style: 'color: teal' }, '请等待上链确认信息, 您的链上Hash: ' + hash + '\n等待时间由当前链块阻塞度与燃油费高低决定, 请耐心等待到账')
+          })
         } else {
           // 激励失败
-          this.$message({
-            type: 'error',
-            message: `操作激励失败`
-          });
+          this.$notify.error({
+            title: '激励转账失败',
+            message: hash.message
+          })
         }
-      }, null, chainType)
+      }, null, this.formtab.chainType)
 
       // 关闭模态框
       this.dialogFormVisible = false;

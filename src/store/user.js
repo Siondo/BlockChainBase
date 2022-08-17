@@ -44,17 +44,15 @@ export default {
             res.data.data.forEach((item) => {
                 if (item.ethMainnetAddress) {
                     item.chainType = 'ETH'
-                    item.coinType = 'USDT'
                     item.tempAddress = item.ethMainnetAddress
                 } else if (item.trcMainnetAddress) {
                     item.chainType = 'TRC'
-                    item.coinType = 'USDT'
                     item.tempAddress = item.trcMainnetAddress
                 } else if (item.bscMainnetAddress) {
                     item.chainType = 'BSC'
-                    item.coinType = 'USDT'
                     item.tempAddress = item.bscMainnetAddress
                 }
+                item.coinType = 'USDT'
             })
             commit('setData', res.data.data)
         },
