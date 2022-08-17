@@ -210,20 +210,26 @@ export default {
             if (this.dataList.code == 200) {
                 this.dataList.data.filter((item) => {
                     switch (item.createType) {
-                        case 0:
-                            item.createType = '管理员'
-                            return
-                        case 1:
-                            item.createType = '总代理'
-                            return
-                        case 2:
-                            item.createType = '代理'
-                            return
-                        case 3:
-                            item.createType = '用户'
-                            return
+                        case '-1':
+                            item.userType = '用户'
+                            break
+                        case '0':
+                            item.userType = '管理员'
+                            break
+                        case '1':
+                            item.userType = '总代理'
+                            break
+                        case '2':
+                            item.userType = '代理'
+                            break
+                        case '3':
+                            item.userType = '一级代理'
+                            break
+                        case '4':
+                            item.userType = '二级代理'
+                            break
                         default:
-                            return;
+                            break;
                     }
                 })
                 this.data = this.dataList.data
