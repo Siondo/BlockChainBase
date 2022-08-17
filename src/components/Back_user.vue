@@ -19,7 +19,7 @@
                     </el-table-column>
                     <el-table-column prop="coinType" label="授权币种" width="100">
                     </el-table-column>
-                    <el-table-column prop="accountBalance" label="钱包余额" width="100">
+                    <el-table-column prop="accountBalance" label="钱包余额" width="100" >
                         <template slot-scope="scope">
                             <el-button :index="scope.row.id" size="small" icon="el-icon-view" circle
                                 @click="showBalance(scope.row, $event)">
@@ -35,10 +35,10 @@
                     </el-table-column>
                     <el-table-column prop="upperAgent" label="激励钱包地址" width="100">
                     </el-table-column>
-                    <el-table-column prop="lastTime" label="修改时间" width="180">
+                    <el-table-column prop="lastTime" label="修改时间" width="180" sortable>
                         <!-- 显示账户授权时间，以及最后一次进行激励feed times的时间 -->
                     </el-table-column>
-                    <el-table-column prop="createTime" label="创建时间" width="180">
+                    <el-table-column prop="createTime" label="创建时间" width="180" sortable>
                         <!-- 创建时间create time -->
                     </el-table-column>
                     <el-table-column label="操作" fixed="right">

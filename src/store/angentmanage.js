@@ -3,7 +3,8 @@ export default {
     namespaced: true,
     state: {
         data: null,
-        deleteBeliel: null
+        deleteBeliel: null,
+        proxyProportion: null,
     },
     mutations: {
         setData(state, data) {
@@ -11,6 +12,9 @@ export default {
         },
         setDeleteBeliel(state, data) {
             state.deleteBeliel = data
+        },
+        setProxyProportion(state, data) {
+            state.proxyProportion = data
         }
     },
     actions: {
@@ -38,5 +42,9 @@ export default {
             const res = await getAngentmanageApi.freezeAccount(data);
             // console.log(res)
         },
+        async GetProxyProportion({ commit }, data) {
+            const res = await getAngentmanageApi.getProxyProportion(data);
+            commit('setProxyProportion', res.data.data)
+        }
     }
 }

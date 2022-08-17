@@ -15,5 +15,9 @@ export default {
     // 冻结账户
     freezeAccount(data) {
         return axios.get(`/template/user/freezeAccount/${data}`)
+    },
+    // 查询分成比例
+    getProxyProportion(data) {
+        return axios.post('/template/user/getProxyProportion', data)
     }
 }

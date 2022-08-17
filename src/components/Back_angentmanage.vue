@@ -18,9 +18,9 @@
                 height="400">
                 <el-table-column fixed prop="id" label="地址" width="300">
                 </el-table-column>
-                <el-table-column prop="lastTime" label="开始时间" width="250">
+                <el-table-column prop="lastTime" label="开始时间" width="250" sortable>
                 </el-table-column>
-                <el-table-column prop="updateTime" label="修改时间" width="250">
+                <el-table-column prop="updateTime" label="修改时间" width="250" sortable>
                 </el-table-column>
                 <el-table-column prop="userId" label="用户账号" width="170">
                 </el-table-column>
@@ -40,6 +40,7 @@
                         <el-button :type="scope.row.loginStatus == 1 ? 'danger' : 'primary'" size="small"
                             :disabled="scope.row.loginStatus == 1 ? true : false" @click="freeze(scope.row)">冻结
                         </el-button>
+                        <el-button size="small" @click="open(scope.row)">查看比例</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -72,7 +73,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(["data", "deleteBeliel"]),
+        ...mapState(["data", "deleteBeliel","proxyProportion"]),
 
     },
 
@@ -117,7 +118,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(['GetAngentmanage', 'DeleteBeliel', 'DeleteAddress', 'FreezeAccount']),
+        ...mapActions(['GetAngentmanage', 'DeleteBeliel', 'DeleteAddress', 'FreezeAccount', 'GetProxyProportion']),
         // 修改比例
         openNum(row) {
             // ele封装的弹出框
@@ -152,6 +153,20 @@ export default {
             }
 
             )
+        },
+        async open(row) {
+            const { id } = row;
+            // 调用分成比例接口
+            await this.GetProxyProportion({ id });
+            this.$alert(`该账户的分成比例为${this.proxyProportion}`, '提示', {
+                confirmButtonText: '确定',
+                // callback: action => {
+                //     this.$message({
+                //         type: 'info',
+                //         message: `action: ${action}`
+                //     });
+                // }
+            });
         },
         // 修改钱包地址
         openAddress(row) {

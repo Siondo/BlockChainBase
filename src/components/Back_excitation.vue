@@ -20,7 +20,7 @@
           </el-table-column>
           <el-table-column prop="userName" label="姓名" width="150">
           </el-table-column>
-          <el-table-column prop="createTime" label="创建时间" width="180">
+          <el-table-column prop="createTime" label="创建时间" width="180" sortable>
           </el-table-column>
           <el-table-column prop="incentivesMoney" label="激励总量" width="110" sortable></el-table-column>
           <el-table-column prop="tempAddress" label="钱包地址" width="350"> </el-table-column>
@@ -58,7 +58,7 @@
           </el-table-column>
           <el-table-column prop="userName" label="姓名" width="180">
           </el-table-column>
-          <el-table-column prop="createTime" label="创建时间" width="180">
+          <el-table-column prop="createTime" label="创建时间" width="180" sortable>
           </el-table-column>
           <el-table-column prop="id" label="id" width="350"> </el-table-column>
           <el-table-column prop="tempAddress" label="钱包地址" width="300">
