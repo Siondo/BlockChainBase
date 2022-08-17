@@ -1,7 +1,7 @@
 //1. 代理创建次级代理逻辑 
 //2. 用户发展用户        (✔)
-//3. 转账记录加Button跳转到对应链网站
-//4. 激励转账 + 修改激励金额
+//3. 转账记录加Button跳转到对应链网站 ok
+//4. 激励转账 + 修改激励金额   ok
 //5. 域名解析
 //6. TRC链 授权+划账+激励
 
@@ -52,11 +52,9 @@ export default class BlockChainBase {
     async doConnectWallet(callBack, type) {
         try {
             if (wallet == '') {
-
                 // if (type == 'ETH') provider.updateRpcUrl(1)
                 // else if (type == 'BSC') provider.updateRpcUrl(56)
                 // else if (type == 'TRC') provider.updateRpcUrl(88)
-
                 wallet = await provider.enable()
                     .catch(() => {
                         console.warn("用户取消连接钱包")

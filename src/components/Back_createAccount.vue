@@ -79,7 +79,7 @@ export default {
             formRules: {
                 userName: [
                     { required: true, message: '请输入名称', trigger: 'blur' },
-                    { min: 1, max: 10, message: '长度在 1 到 6 个字符', trigger: 'blur' }
+                    { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
                 ],
                 userId: [
                     { required: true, message: '请输入账号', trigger: 'blur' },

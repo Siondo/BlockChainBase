@@ -41,13 +41,18 @@
             <!-- 划账表格 -->
             <el-table :data="data.slice((page - 1) * size, page * size)" border style="width: 100%" size="medium"
                 height="400" v-if="showDrawing">
-                <el-table-column fixed prop="userName" label="修改人" width="250">
+                <el-table-column fixed prop="userName" label="修改人" width="150">
                 </el-table-column>
                 <el-table-column prop="collectionAddress" label="收款钱包地址">
                 </el-table-column>
                 <el-table-column prop="sendAddress" label="发款钱包地址">
                 </el-table-column>
                 <el-table-column prop="hash" label="交易地址">
+
+                    <template slot-scope="scope">
+                        <!-- <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button> -->
+                        <a :href="scope.row.hash">{{ scope.row.hash }}</a>
+                    </template>
                 </el-table-column>
                 <el-table-column prop="createTime" label="修改时间" width="200" fixed="right">
                 </el-table-column>
@@ -110,7 +115,8 @@ export default {
     data() {
         return {
             show: true,
-            data: [],
+            data: [
+            ],
             showjiliPercent: false,
             showDrawing: false,
             showjili: false,
@@ -162,6 +168,7 @@ export default {
             this.showStop = false
         },
         async handleDrawing() {
+            console.log(this.data);
             this.page = 1
             let user = JSON.parse(sessionStorage.getItem("user"))
             await this.GetHistory({ userType: user.userType, type: 3, pid: user.id })

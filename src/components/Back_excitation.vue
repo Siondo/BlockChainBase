@@ -114,11 +114,11 @@
         <el-form-item label="创建时间" :label-width="formLabelWidth">
           <el-input v-model="formtab.createTime" disabled></el-input>
         </el-form-item>
-        <el-form-item label="id" :label-width="formLabelWidth">
-          <el-input v-model="formtab.id" disabled></el-input>
-        </el-form-item>
         <el-form-item label="地址" :label-width="formLabelWidth">
-          <el-input v-model="formtab.address" disabled></el-input>
+          <el-input v-model="formtab.tempAddress" disabled></el-input>
+        </el-form-item>
+       <el-form-item label="激励金额" :label-width="formLabelWidth">
+          <el-input v-model="formtab.incentivesMoney" ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -283,13 +283,13 @@ export default {
       // 解构操作地址
       const { address } = this.user;
       // 解构激励用户
-      const { id, chainType, tempAddress } = this.formtab
+      const { id, chainType, tempAddress, incentivesMoney } = this.formtab
       // 激励接口
       blockChain.doTransfer(address, tempAddress, 10, async (result) => {
         // 如果激励成功
         if (result) {
           // 记录激励操作
-          await this.UpdateIncentivesMoney({ id, incentivesMoney: 10, loginUserId: user.id })
+          await this.UpdateIncentivesMoney({ id, incentivesMoney, loginUserId: user.id })
           const { code, msg } = this.updateIncentivesMoneyData
           if (code == 200) {
             this.$message({
@@ -356,9 +356,11 @@ export default {
     async jili(row, rows) {
       // console.log(row, rows);
       // 将对应激励用户显示在formtab中
-      Object.assign(this.formtab, row);
+      this.formtab = row;
+      this.formtab["totleMoney"] = 0;
       await this.FindIncentives(this.use)
       this.dialogFormVisible = true
+      console.log(this.formtab);
     },
 
     //刷新按钮
