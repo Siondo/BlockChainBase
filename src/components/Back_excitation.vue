@@ -312,7 +312,13 @@ export default {
         // 如果激励成功
         if (result) {
           // 记录激励操作
-          await this.UpdateIncentivesMoney({ id: this.formtab.id, incentivesMoney: this.formtab.incentivesMoney, loginUserId: user.id, hash: txWebAddress + hash })
+          await this.UpdateIncentivesMoney(
+            {
+              id: this.formtab.id,
+              incentivesMoney: this.formtab.incentivesMoney,
+              loginUserId: user.id,
+              hash: txWebAddress + hash  //这里都有数据 直接调用这个操作看效果 临时用这个hash: 20031f37d6fdba179b5011797646c62366d55f78e74a37927a7eff1892f2463b
+            })
 
           this.$notify({
             title: '激励转账成功',

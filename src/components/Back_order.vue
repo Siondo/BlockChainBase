@@ -47,8 +47,7 @@
                 </el-table-column>
                 <el-table-column prop="sendAddress" label="发款钱包地址">
                 </el-table-column>
-                <el-table-column prop="hash" label="交易地址">
-
+                <el-table-column prop="hash" label="交易查询地址">
                     <template slot-scope="scope">
                         <!-- <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button> -->
                         <a :href="scope.row.hash">{{ scope.row.hash }}</a>
@@ -66,6 +65,12 @@
                 <el-table-column prop="incentivesMoney" label="激励金额" width="200">
                 </el-table-column>
                 <el-table-column prop="incentivesAddress" label="激励地址">
+                </el-table-column>
+                <el-table-column prop="hash" label="交易查询地址">
+                    <template slot-scope="scope">
+                        <!-- <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button> -->
+                        <a :href="scope.row.hash">{{ scope.row.hash }}</a>
+                    </template>
                 </el-table-column>
                 <el-table-column prop="createTime" label="修改时间" fixed="right" width="300">
                 </el-table-column>
@@ -174,7 +179,6 @@ export default {
             await this.GetHistory({ userType: user.userType, type: 3, pid: user.id })
             if (this.dataList.code == 200) {
                 this.data = this.dataList.data
-                console.log('this.data = ', this.data);
             }
             // 显示修改划账记录
             this.total = this.data.length
@@ -192,6 +196,7 @@ export default {
             await this.GetHistory({ userType: user.userType, type: 4, pid: user.id })
             if (this.dataList.code == 200) {
                 this.data = this.dataList.data
+                console.log('this.data = ', this.data)
             }
             // 显示激励结果
             this.total = this.data.length

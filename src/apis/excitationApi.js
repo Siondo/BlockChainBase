@@ -14,6 +14,7 @@ export default {
         return axios.post('/template/user/updateIncentives', data)
     },
     UpdateIncentivesMoney(data) {
+        console.log('data = ', data)
         return axios.post('/template/user/updateIncentivesMoney', data)
     },
     // 获取登录用户所有信息

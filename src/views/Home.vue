@@ -28,10 +28,10 @@
             ACCOUNT
           </a>
         </router-link>
-        <a @click="quit">
+        <!-- <a @click="quit">
           <i class="iconfont  icon-icon"></i>
           QUIT
-        </a>
+        </a> -->
       </div>
     </div>
     <div style="height: 50vw">

