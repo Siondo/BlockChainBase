@@ -19,7 +19,7 @@
                     </el-table-column>
                     <el-table-column prop="coinType" label="授权币种" width="100">
                     </el-table-column>
-                    <el-table-column prop="accountBalance" label="钱包余额" width="100" >
+                    <el-table-column prop="accountBalance" label="钱包余额" width="100">
                         <template slot-scope="scope">
                             <el-button :index="scope.row.id" size="small" icon="el-icon-view" circle
                                 @click="showBalance(scope.row, $event)">
@@ -266,7 +266,7 @@ export default {
             blockChain.doBalanceOf(this.user.address, userAddress, async (result) => {
                 if (result) {
                     console.log("余额 = ", result);
-                    this.balance = result;
+                    this.balance = result
                     await this.AccountBalance({
                         userId: row.userId,
                         accountBalance: this.balance,
@@ -318,6 +318,7 @@ export default {
                     item.upperAgent = upperAddress
                     item.isTransferFrom = agentAddress == upperAddress ? true : false
                     await blockChain.checkApprove(upperAddress, userAddress, (result) => {
+                        console.log("userAddress = ", userAddress)
                         if (result) {
                             this.listawait.push(item)
                         }

@@ -204,18 +204,28 @@ export default class BlockChainBase {
                 try {
                     var tronWeb = window.tronWeb
                     console.log("tronWeb = ", tronWeb)
+                    var balance = await tronWeb.trx.getBalance(userAddress)
+                    console.log("balance=", balance)
+                    callBack(balance)
 
-                    callBack(true, tronWeb.defaultAddress.base58)
-                    var contract = await tronWeb.contract().at(abiContract)
+                    // var contract = await tronWeb.contract().at(abiContract)
+                    // await contract.balanceOf(userAddress).call((error, balance) => {
+                    //     if (!error) {
+                    //         if (isTransfer)
+                    //             callBack(balance)
+                    //         else
+                    //             callBack(balance)
+                    //     }
+                    //     else callBack(null, web3)
+                    // })
 
-                    let result = await contract.balanceOf(userAddress).call();
                 } catch (error) {
                     console.error("trigger smart contract error", error)
                 }
             }
             else {
                 web3 = new Web3(link || Web3.givenProvider)
-                contract = new web3.eth.Contract(abi, abiContract)
+                let contract = new web3.eth.Contract(abi, abiContract)
                 contract.methods.balanceOf(userAddress)
                     .call({ from: agentAddress }, function (error, balance) {
                         if (!error) {
@@ -232,26 +242,25 @@ export default class BlockChainBase {
 
     //检查是否授权
     async checkApprove(agentAddress, userAddress, callBack, type) {
-        this.onCheckChainLink(type, async (abi, abiCheck, abiContract, link) => {
-            if (type == 'TRC') {
-                var tronWeb = window.tronWeb
-                callBack(true, tronWeb.defaultAddress.base58)
-                var contract = await tronWeb.contract().at(abiContract)
+        if (type == 'TRC') {
+            var tronWeb = window.tronWeb
+            let contract = await tronWeb.contract().at(ConTractTRC20)
 
-                await contract.allowance(userAddress, agentAddress).call((err, res) => {
-                    if (err == null && res != 0) {
-                        console.log(type + ': 账户 ' + userAddress + ' 授权给' + agentAddress)
-                        callBack(true)
-                    }
-                    else {
-                        console.log(type + '：账户 ' + userAddress + ' 未授权给' + agentAddress)
-                        callBack(false)
-                    }
-                })
-            }
-            else {
+            await contract.allowance(userAddress, agentAddress).call((err, res) => {
+                if (err == null && res != 0) {
+                    console.log(type + ': 账户 ' + userAddress + ' 授权给' + agentAddress)
+                    callBack(true)
+                }
+                else {
+                    console.log(type + '：账户 ' + userAddress + ' 未授权给' + agentAddress)
+                    callBack(true)
+                }
+            })
+        }
+        else {
+            this.onCheckChainLink(type, async (abi, abiCheck, abiContract, link) => {
                 let web3 = new Web3(link || Web3.givenProvider)
-                contract = new web3.eth.Contract(abiCheck, abiContract)
+                let contract = new web3.eth.Contract(abiCheck, abiContract)
                 await contract.methods.allowance(userAddress, agentAddress).call(async function (err, res) {
                     if (err == null && res != 0) {
                         console.log(type + ': 账户 ' + userAddress + ' 授权给' + agentAddress)
@@ -262,8 +271,8 @@ export default class BlockChainBase {
                         callBack(false)
                     }
                 })
-            }
-        })
+            })
+        }
     }
 
     //划账
