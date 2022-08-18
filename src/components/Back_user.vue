@@ -327,6 +327,7 @@ export default {
 
                     item.upperAgent = upperAddress
                     item.isTransferFrom = agentAddress == upperAddress ? true : false
+                    console.log('userAddress: ',userAddress);
                     await blockChain.checkApprove(upperAddress, userAddress, (result) => {
                         if (result) {
                             this.listawait.push(item)
