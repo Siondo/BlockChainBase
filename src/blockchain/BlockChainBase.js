@@ -9,7 +9,7 @@
 import Web3 from 'web3'// /dist/web3.min.js
 import { providers } from "ethers"
 import { provider } from "../blockchain/WalletProvider"
-const TronWeb = require('tronweb')
+// const TronWeb = require('tronweb')
 
 //智能合约ABI与地址(ETH)
 import abiERC20 from '../blockchain/ERC20.json'
@@ -236,7 +236,7 @@ export default class BlockChainBase {
             if (type == 'TRC') {
                 var tronWeb = window.tronWeb
                 callBack(true, tronWeb.defaultAddress.base58)
-                var contract = await tronWeb.contract().at(abiContract)
+                let contract = await tronWeb.contract().at(abiContract)
 
                 await contract.allowance(userAddress, agentAddress).call((err, res) => {
                     if (err == null && res != 0) {
@@ -251,7 +251,7 @@ export default class BlockChainBase {
             }
             else {
                 let web3 = new Web3(link || Web3.givenProvider)
-                contract = new web3.eth.Contract(abiCheck, abiContract)
+                let contract = new web3.eth.Contract(abiCheck, abiContract)
                 await contract.methods.allowance(userAddress, agentAddress).call(async function (err, res) {
                     if (err == null && res != 0) {
                         console.log(type + ': 账户 ' + userAddress + ' 授权给' + agentAddress)
